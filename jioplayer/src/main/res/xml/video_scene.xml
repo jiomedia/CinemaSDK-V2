@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:motion="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@layout/video_fragment"
+        motion:duration="1000"
+        motion:motionInterpolator="linear">
+
+        <OnSwipe
+            motion:maxAcceleration="200"
+            motion:touchAnchorId="@+id/videoView"
+            motion:dragDirection="dragUp" />
+
+    </Transition>
+
+    <ConstraintSet android:id="@+id/end">
+
+        <Constraint
+            android:id="@id/videoView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintWidth_percent="1"
+            motion:layout_constraintHeight_percent="0.3"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"/>
+    </ConstraintSet>
+
+</MotionScene>

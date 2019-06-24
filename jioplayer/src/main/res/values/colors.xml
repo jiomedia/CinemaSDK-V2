@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mediaTransparent">#00000000</color>
+    <color name="mediaWhite">#FFFFFF</color>
+    <color name="mediaScrubberColor">#FFFF0000</color>
+    <color name="mediaPlayedColor">#FFFF0000</color>
+    <color name="mediaUnplayedColor">#77FFFFFF</color>
+    <color name="mediaBufferedColor">#FFFFFFFF</color>
+    <color name="mediaProgressBarColor">#303F9F</color>
+</resources>

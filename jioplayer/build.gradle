@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+
+    dataBinding {
+        enabled = true
+    }
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+}
+
+ext.exoPlayerVersion = '2.10.1'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+
+    api "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
+    api "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+    api "com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion"
+    api "com.google.android.exoplayer:exoplayer-dash:$exoPlayerVersion"
+    api "com.google.android.exoplayer:extension-ima:$exoPlayerVersion"
+
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+}
