@@ -20,33 +20,37 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.jio.media.library.player.MediaPlayerHelper;
 import com.jio.media.library.player.MediaPlayerListener;
 import com.jio.media.library.player.R;
-import com.jio.media.library.player.databinding.VideoFragmentBinding;
+import com.jio.media.library.player.databinding.ActivityPlayerBinding;
 import com.jio.media.library.player.model.information.VideoInformation;
 import com.jio.media.library.player.utils.Logger;
 import com.jio.media.library.player.utils.MediaUtils;
 
 public class PlayerViewActivity extends AppCompatActivity implements MediaPlayerListener
 {
-    private VideoFragmentBinding binding;
+    private ActivityPlayerBinding binding;
     private MediaPlayerHelper mediaPlayerHelper;
     private VideoInformation videoInformation;
 
     private BottomSheetBehavior sheetBehavior;
 
     private LinearLayout.LayoutParams videoParams;
+    private LinearLayout.LayoutParams infoParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.video_fragment);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_player);
         sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+
         videoParams = (LinearLayout.LayoutParams) binding.videoView.getLayoutParams();
+        infoParams = (LinearLayout.LayoutParams) binding.infoContainer.getLayoutParams();
         videoParams.width = (int) (getScreenWidth(this) * 0.35);
         videoParams.height = (int) (getScreenHeight(this) * 0.096);
 
-        binding.infoContainer.getLayoutParams().height = (int) (getScreenHeight(this) * 0.096);
+        infoParams.height = (int) (getScreenHeight(this) * 0.096);
 
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getExtras() != null) {
@@ -163,14 +167,14 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
+    public void onConfigurationChanged(@NonNull Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Logger.d("onConfigurationChanged: Landscape");
+            orientationLandscape();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Logger.d("onConfigurationChanged: Portrait");
+            orientationPortrait();
         }
     }
 
@@ -183,9 +187,28 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
                 .addSavedInstanceState(savedInstanceState)
                 .setFullScreenBtnVisible()
                 .setMuteBtnVisible()
+                .addMuteButton(true, true)
                 .setUiControllersVisibility(true)
                 .setExoPlayerEventsListener(this)
                 .createAndPrepare();
+    }
+
+    private void orientationPortrait() {
+        if (mediaPlayerHelper != null) {
+            mediaPlayerHelper.setFullMode(false);
+            videoParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            videoParams.height = (int) (getScreenHeight(PlayerViewActivity.this) * 0.35);
+            binding.videoView.setLayoutParams(videoParams);
+        }
+    }
+
+    private void orientationLandscape() {
+        if (mediaPlayerHelper != null) {
+            mediaPlayerHelper.setFullMode(true);
+            videoParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            videoParams.height = getScreenHeight(PlayerViewActivity.this);
+            binding.videoView.setLayoutParams(videoParams);
+        }
     }
 
     @Override
@@ -323,6 +346,10 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     @Override
     public void onFullScreenBtnTap()
     {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if (mediaPlayerHelper.isFullMode()) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
     }
 }

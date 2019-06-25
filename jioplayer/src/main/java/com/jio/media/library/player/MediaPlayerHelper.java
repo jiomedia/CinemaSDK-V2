@@ -105,6 +105,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     private boolean isToPrepareOnResume = true;
     private boolean isThumbImageViewEnabled;
     private boolean isLiveStreamSupportEnabled;
+    private boolean fullMode = false;
 
     private MediaPlayerHelper(Context context, PlayerView exoPlayerView)
     {
@@ -499,6 +500,16 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     {
         updateMutedStatus();
         isAdWasShown = true;
+    }
+
+    public boolean isFullMode()
+    {
+        return fullMode;
+    }
+
+    public void setFullMode(boolean fullMode)
+    {
+        this.fullMode = fullMode;
     }
 
     @SuppressWarnings("SameParameterValue")

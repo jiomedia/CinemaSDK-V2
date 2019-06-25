@@ -4,7 +4,7 @@
 
     <Transition
         motion:constraintSetEnd="@+id/end"
-        motion:constraintSetStart="@layout/video_fragment"
+        motion:constraintSetStart="@layout/activity_player"
         motion:duration="1000"
         motion:motionInterpolator="linear">
 
