@@ -143,6 +143,16 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if (mediaPlayerHelper != null && mediaPlayerHelper.isFullMode()) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public boolean isAppInstalled(Context context, String packageName) {
         try {
             context.getPackageManager().getApplicationInfo(packageName, 0);
@@ -172,9 +182,11 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Logger.d("orientation: ORIENTATION_LANDSCAPE");
             orientationLandscape();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             orientationPortrait();
+            Logger.d("orientation: ORIENTATION_PORTRAIT");
         }
     }
 
