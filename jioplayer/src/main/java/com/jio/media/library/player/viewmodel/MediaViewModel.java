@@ -1,11 +1,10 @@
 package com.jio.media.library.player.viewmodel;
 
 import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.jio.media.library.player.analytics.AnalyticsEvent;

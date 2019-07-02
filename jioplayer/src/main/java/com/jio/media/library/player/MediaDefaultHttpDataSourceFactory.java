@@ -1,6 +1,6 @@
 package com.jio.media.library.player;
 
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.HttpDataSource;

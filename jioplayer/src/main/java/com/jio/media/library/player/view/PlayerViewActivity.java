@@ -5,18 +5,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.jio.media.library.player.MediaPlayerHelper;
 import com.jio.media.library.player.MediaPlayerListener;
 import com.jio.media.library.player.R;
@@ -129,7 +128,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset)
             {
-                Logger.d("slideOffset: "+ slideOffset);
+                Logger.d("slideOffset: " + slideOffset);
                 if (slideOffset > 0.3) {
                     videoParams.width = getScreenWidth(PlayerViewActivity.this);
                     videoParams.height = (int) (getScreenHeight(PlayerViewActivity.this) * 0.35);
@@ -153,7 +152,8 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    public boolean isAppInstalled(Context context, String packageName) {
+    public boolean isAppInstalled(Context context, String packageName)
+    {
         try {
             context.getPackageManager().getApplicationInfo(packageName, 0);
             return true;
@@ -165,14 +165,14 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     public static int getScreenWidth(Context context)
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((PlayerViewActivity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ((PlayerViewActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.widthPixels;
     }
 
     public static int getScreenHeight(Context context)
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((PlayerViewActivity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ((PlayerViewActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
 
@@ -205,7 +205,8 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
                 .createAndPrepare();
     }
 
-    private void orientationPortrait() {
+    private void orientationPortrait()
+    {
         if (mediaPlayerHelper != null) {
             mediaPlayerHelper.setFullMode(false);
             videoParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -214,7 +215,8 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    private void orientationLandscape() {
+    private void orientationLandscape()
+    {
         if (mediaPlayerHelper != null) {
             mediaPlayerHelper.setFullMode(true);
             videoParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
