@@ -333,7 +333,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         mBtnMute.setImageResource(this.isVideoMuted ? R.drawable.ic_action_mute : R.drawable.ic_action_volume_up);
     }
 
-    private void updateMutedStatus()
+    public void updateMutedStatus()
     {
         boolean isMuted = (mPlayer.isPlayingAd() && isAdMuted) || (!mPlayer.isPlayingAd() && isVideoMuted);
         if (isMuted) {
