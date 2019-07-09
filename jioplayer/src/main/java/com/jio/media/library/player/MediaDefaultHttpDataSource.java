@@ -1,9 +1,8 @@
 package com.jio.media.library.player;
 
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
-import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.metadata.icy.IcyHeaders;

@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.jiomedia'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 28
 
     dataBinding {
         enabled = true
@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -29,23 +29,24 @@ android {
     }
 }
 
-ext.exoPlayerVersion = '2.10.1'
+ext.exoPlayerVersion = '2.10.2'
+ext.exoPlayerUiVersion = '2.9.6'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
 
     api "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
-    api "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+    api "com.google.android.exoplayer:exoplayer-ui:$exoPlayerUiVersion"
     api "com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion"
     api "com.google.android.exoplayer:exoplayer-dash:$exoPlayerVersion"
     api "com.google.android.exoplayer:extension-ima:$exoPlayerVersion"
 
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-beta2'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'com.android.support:design:28.0.0'
 }
