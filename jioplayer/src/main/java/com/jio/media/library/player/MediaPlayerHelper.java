@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.ads.interactivemedia.v3.api.AdEvent;
 import com.google.android.exoplayer2.C;
@@ -88,6 +89,8 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     private ImageView mBtnMute;
     private ImageView mBtnFullScreen;
     private ImageView mThumbImage;
+    private ImageView imgVideoBack;
+    private TextView txtVideoName;
 
     private Uri[] mVideosUris;
     private ArrayList<String> mSubTitlesUrls;
@@ -124,6 +127,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         mContext = context;
         mExoPlayerView = exoPlayerView;
         mProgressBar = mExoPlayerView.findViewById(R.id.exo_buffering);
+        txtVideoName = mExoPlayerView.findViewById(R.id.cinema_video_name);
 
         setVideoClickable();
         setControllerListener();
@@ -168,6 +172,9 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     {
         mExoPlayerView.findViewById(R.id.exo_play).setOnTouchListener(this);
         mExoPlayerView.findViewById(R.id.exo_pause).setOnTouchListener(this);
+
+        imgVideoBack = mExoPlayerView.findViewById(R.id.cinema_player_back_button);
+        imgVideoBack.setOnTouchListener(this);
 
         mBtnMute = mExoPlayerView.findViewById(R.id.btnMute);
         mBtnFullScreen = mExoPlayerView.findViewById(R.id.btnFullScreen);
@@ -411,6 +418,13 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
                 return true;
             }
 
+            if (view.getId() == R.id.cinema_player_back_button) {
+                if (mExoPlayerListener != null) {
+                    mExoPlayerListener.onVideoBackBtnTap();
+                }
+                return true;
+            }
+
             if (view.getId() == R.id.btnMute) {
                 if (mPlayer.isPlayingAd()) {
                     isVideoMuted = isAdMuted = !isAdMuted;
@@ -549,6 +563,12 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         public Builder setTagUrl(String tagUrl)
         {
             mExoPlayerHelper.mTagUrl = tagUrl;
+            return this;
+        }
+
+        public Builder setVideoName(String videoName)
+        {
+            mExoPlayerHelper.txtVideoName.setText(videoName);
             return this;
         }
 

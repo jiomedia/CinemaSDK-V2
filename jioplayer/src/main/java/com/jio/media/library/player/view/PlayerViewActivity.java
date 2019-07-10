@@ -118,6 +118,12 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState)
             {
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE && newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    return;
+                }
+
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     binding.videoView.setUseController(true);
                 } else {
@@ -199,6 +205,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
                 .addSavedInstanceState(savedInstanceState)
                 .setFullScreenBtnVisible()
                 .setMuteBtnVisible()
+                .setVideoName(videoInformation.getName())
                 .addMuteButton(true, true)
                 .setUiControllersVisibility(true)
                 .setExoPlayerEventsListener(this)
@@ -365,5 +372,11 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         }
+    }
+
+    @Override
+    public void onVideoBackBtnTap()
+    {
+        onBackPressed();
     }
 }

@@ -33,4 +33,6 @@ public interface MediaPlayerListener
     boolean onPauseBtnTap();
 
     void onFullScreenBtnTap();
+
+    void onVideoBackBtnTap();
 }
