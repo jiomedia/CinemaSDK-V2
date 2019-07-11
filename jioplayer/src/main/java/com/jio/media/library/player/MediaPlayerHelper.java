@@ -127,6 +127,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         mContext = context;
         mExoPlayerView = exoPlayerView;
         mProgressBar = mExoPlayerView.findViewById(R.id.exo_buffering);
+        mProgressBar.getIndeterminateDrawable().setColorFilter(0xFFD9008D, android.graphics.PorterDuff.Mode.MULTIPLY);
         txtVideoName = mExoPlayerView.findViewById(R.id.cinema_video_name);
 
         setVideoClickable();
