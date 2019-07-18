@@ -135,6 +135,16 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         init();
     }
 
+    public void updateVideoName(boolean isVisible) {
+        if (txtVideoName != null) {
+            if (isVisible) {
+                txtVideoName.setVisibility(View.VISIBLE);
+            } else {
+                txtVideoName.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private void addProgressBar(int color)
     {
         FrameLayout frameLayout = mExoPlayerView.getOverlayFrameLayout();

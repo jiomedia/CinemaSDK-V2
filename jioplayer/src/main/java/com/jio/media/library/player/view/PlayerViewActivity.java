@@ -61,6 +61,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
                     binding.videoDescription.setText(videoInformation.getVideoDescription());
                     binding.videoView.setUseController(false);
                     binding.videoMetadataTitle.setText(videoInformation.getVideoTitle());
+                    updateVideoName(false);
                     MediaUtils.showImage(binding.bannerImage, videoInformation.getBannerImage());
 
                     if (isAppInstalled(PlayerViewActivity.this, "com.jio.media.ondemand")) {
@@ -193,9 +194,19 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Logger.d("orientation: ORIENTATION_LANDSCAPE");
             orientationLandscape();
+            updateVideoName(true);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             orientationPortrait();
+            updateVideoName(false);
             Logger.d("orientation: ORIENTATION_PORTRAIT");
+        }
+    }
+
+    private void updateVideoName(boolean isVisble)
+    {
+        if (mediaPlayerHelper != null)
+        {
+            mediaPlayerHelper.updateVideoName(isVisble);
         }
     }
 
