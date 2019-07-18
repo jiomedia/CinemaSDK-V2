@@ -126,6 +126,9 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
 
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     binding.videoView.setUseController(true);
+                    if (mediaPlayerHelper != null && mediaPlayerHelper.isVideoMuted()) {
+                        mediaPlayerHelper.updateVolume();
+                    }
                 } else {
                     binding.videoView.setUseController(false);
                 }

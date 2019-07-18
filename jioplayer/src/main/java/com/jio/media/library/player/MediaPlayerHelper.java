@@ -427,22 +427,30 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
             }
 
             if (view.getId() == R.id.btnMute) {
-                if (mPlayer.isPlayingAd()) {
-                    isVideoMuted = isAdMuted = !isAdMuted;
-                } else {
-                    isAdMuted = isVideoMuted = !isVideoMuted;
-                }
-                ((ImageView) view).setImageResource(isVideoMuted ? R.drawable.ic_action_mute : R.drawable.ic_action_volume_up);
-                updateMutedStatus();
-                if (mExoPlayerListener != null) {
-                    mExoPlayerListener.onMuteStateChanged(isVideoMuted);
-                }
+                updateVolume();
                 return true;
             }
         }
 
         FrameLayout layout = mExoPlayerView.getOverlayFrameLayout();
         return layout != null && view.getId() == layout.getId();
+    }
+
+    public void updateVolume() {
+        if (mPlayer.isPlayingAd()) {
+            isVideoMuted = isAdMuted = !isAdMuted;
+        } else {
+            isAdMuted = isVideoMuted = !isVideoMuted;
+        }
+        updateMutedStatus();
+        if (mExoPlayerListener != null) {
+            mExoPlayerListener.onMuteStateChanged(isVideoMuted);
+        }
+    }
+
+    public boolean isVideoMuted()
+    {
+        return isVideoMuted;
     }
 
     private void addSavedInstanceState(Bundle savedInstanceState)
