@@ -1107,7 +1107,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
 
         if (mExoPlayerListener != null) {
-            mExoPlayerListener.onPlayerError(errorString);
+            mExoPlayerListener.onPlayerError(e.type, errorString);
         }
     }
 
