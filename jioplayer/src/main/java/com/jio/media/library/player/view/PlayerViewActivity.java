@@ -325,9 +325,9 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     }
 
     @Override
-    public void onPlayerError(String errorString)
+    public void onPlayerError(int code, String errorString)
     {
-        Logger.d(errorString);
+
     }
 
     @Override
