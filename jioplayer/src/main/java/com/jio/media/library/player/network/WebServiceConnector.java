@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.jio.media.library.player.model.LoginData;
+import com.jio.media.library.player.utils.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,14 +49,14 @@ public class WebServiceConnector extends WebServiceClient
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), (jsonObject.toString()));
-
+        Logger.d("loginViaSubId" +"," + ssoToken +"," + subscriberId +"," + deviceId +"," + requestCode);
         ApiInterface service = getRetrofitProd().create(ApiInterface.class);
         service.loginViaSubIdResponse(ssoToken, deviceId, DEVICE_TYPE, body).enqueue(new APICallback(requestCode, apiResultListener));
     }
 
     public void getRefreshTokenData(final INetworkResultListener apiResultListener, final int requestCode, String deviceInfo) {
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), (deviceInfo));
-
+        Logger.d("refreshToken" +requestCode + "," +deviceInfo );
         ApiInterface service = getRetrofitSecure().create(ApiInterface.class);
         service.refreshTokenResponse(body).enqueue(new APICallback(requestCode, apiResultListener));
     }
@@ -70,7 +71,7 @@ public class WebServiceConnector extends WebServiceClient
         if (loginData != null) {
             String ssoToken = loginData.getSsoToken();
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), (requestBody));
-
+            Logger.d("playBackRightData" + requestBody +","+requestCode + "," + contentId + "," + ssoToken);
             ApiInterface service = getRetrofitProd().create(ApiInterface.class);
             service.getPlayBackRightData(ssoToken, contentId, body).enqueue(new APICallback(requestCode, apiResultListener));
         }

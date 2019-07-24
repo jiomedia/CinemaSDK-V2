@@ -61,6 +61,9 @@ class WebServiceClient extends RequestUtils
                         .addHeader("appkey", "06758e99be484fca56fb")
                         .addHeader("applicationidentifier", "904ea48a-588b-4d32-a16e-8e163bfa55ef")
                         .build();
+
+                Logger.d("headers" + request);
+
                 return chain.proceed(request);
             }
         };
