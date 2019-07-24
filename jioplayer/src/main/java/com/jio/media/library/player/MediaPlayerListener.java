@@ -14,7 +14,7 @@ public interface MediaPlayerListener
 
     void onPlayerStateIdle(int currentWindowIndex);
 
-    void onPlayerError(String errorString);
+    void onPlayerError(int code, String errorString);
 
     void createExoPlayerCalled(boolean isToPrepare);
 
@@ -33,4 +33,6 @@ public interface MediaPlayerListener
     boolean onPauseBtnTap();
 
     void onFullScreenBtnTap();
+
+    void onVideoBackBtnTap();
 }

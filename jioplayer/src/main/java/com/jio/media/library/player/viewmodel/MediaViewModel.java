@@ -145,12 +145,16 @@ public class MediaViewModel extends AndroidViewModel implements INetworkResultLi
                     videoInformation.setName(playBackRights.getContentName());
                     videoInformation.setUrl(playBackRights.getVideo().getAuto());
                     if (configResponse != null) {
-                        videoInformation.setVideoTitle(configResponse.getUrl().getAutoPlay().getVideoTitle());
-                        videoInformation.setVideoSubTitle(configResponse.getUrl().getAutoPlay().getVideoSubTitle());
-                        videoInformation.setVideoDescription(configResponse.getUrl().getAutoPlay().getVideoDesc());
-                        videoInformation.setBannerImage(configResponse.getUrl().getImage()+configResponse.getUrl().getAutoPlay().getBannerImage());
-                        videoInformation.setUrlDownload(configResponse.getUrl().getAutoPlay().getJCdownload());
-                        videoInformation.setUrlRedirect(configResponse.getUrl().getAutoPlay().getJCredirect());
+                        AutoPlay autoPlay = configResponse.getUrl().getAutoPlay();
+                        if (autoPlay != null) {
+                            videoInformation.setContentId(autoPlay.getContentId());
+                            videoInformation.setVideoTitle(autoPlay.getVideoTitle());
+                            videoInformation.setVideoSubTitle(autoPlay.getVideoSubTitle());
+                            videoInformation.setVideoDescription(autoPlay.getVideoDesc());
+                            videoInformation.setBannerImage(configResponse.getUrl().getImage()+autoPlay.getBannerImage());
+                            videoInformation.setUrlDownload(autoPlay.getJCdownload());
+                            videoInformation.setUrlRedirect(autoPlay.getJCredirect());
+                        }
                     }
                     informationLiveData.setValue(videoInformation);
                 }

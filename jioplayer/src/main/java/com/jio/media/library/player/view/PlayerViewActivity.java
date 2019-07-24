@@ -61,6 +61,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
                     binding.videoDescription.setText(videoInformation.getVideoDescription());
                     binding.videoView.setUseController(false);
                     binding.videoMetadataTitle.setText(videoInformation.getVideoTitle());
+                    updateVideoName(false);
                     MediaUtils.showImage(binding.bannerImage, videoInformation.getBannerImage());
 
                     if (isAppInstalled(PlayerViewActivity.this, "com.jio.media.ondemand")) {
@@ -118,8 +119,17 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState)
             {
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE && newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    return;
+                }
+
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     binding.videoView.setUseController(true);
+                    if (mediaPlayerHelper != null && mediaPlayerHelper.isVideoMuted()) {
+                        mediaPlayerHelper.updateVolume();
+                    }
                 } else {
                     binding.videoView.setUseController(false);
                 }
@@ -184,9 +194,19 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Logger.d("orientation: ORIENTATION_LANDSCAPE");
             orientationLandscape();
+            updateVideoName(true);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             orientationPortrait();
+            updateVideoName(false);
             Logger.d("orientation: ORIENTATION_PORTRAIT");
+        }
+    }
+
+    private void updateVideoName(boolean isVisble)
+    {
+        if (mediaPlayerHelper != null)
+        {
+            mediaPlayerHelper.updateVideoName(isVisble);
         }
     }
 
@@ -199,6 +219,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
                 .addSavedInstanceState(savedInstanceState)
                 .setFullScreenBtnVisible()
                 .setMuteBtnVisible()
+                .setVideoName(videoInformation.getName())
                 .addMuteButton(true, true)
                 .setUiControllersVisibility(true)
                 .setExoPlayerEventsListener(this)
@@ -304,9 +325,9 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     }
 
     @Override
-    public void onPlayerError(String errorString)
+    public void onPlayerError(int code, String errorString)
     {
-        Logger.d(errorString);
+
     }
 
     @Override
@@ -365,5 +386,11 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         }
+    }
+
+    @Override
+    public void onVideoBackBtnTap()
+    {
+        onBackPressed();
     }
 }

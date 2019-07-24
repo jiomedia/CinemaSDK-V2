@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.ads.interactivemedia.v3.api.AdEvent;
 import com.google.android.exoplayer2.C;
@@ -88,6 +89,8 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     private ImageView mBtnMute;
     private ImageView mBtnFullScreen;
     private ImageView mThumbImage;
+    private ImageView imgVideoBack;
+    private TextView txtVideoName;
 
     private Uri[] mVideosUris;
     private ArrayList<String> mSubTitlesUrls;
@@ -124,10 +127,22 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         mContext = context;
         mExoPlayerView = exoPlayerView;
         mProgressBar = mExoPlayerView.findViewById(R.id.exo_buffering);
+        mProgressBar.getIndeterminateDrawable().setColorFilter(0xFFD9008D, android.graphics.PorterDuff.Mode.MULTIPLY);
+        txtVideoName = mExoPlayerView.findViewById(R.id.cinema_video_name);
 
         setVideoClickable();
         setControllerListener();
         init();
+    }
+
+    public void updateVideoName(boolean isVisible) {
+        if (txtVideoName != null) {
+            if (isVisible) {
+                txtVideoName.setVisibility(View.VISIBLE);
+            } else {
+                txtVideoName.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void addProgressBar(int color)
@@ -168,6 +183,9 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     {
         mExoPlayerView.findViewById(R.id.exo_play).setOnTouchListener(this);
         mExoPlayerView.findViewById(R.id.exo_pause).setOnTouchListener(this);
+
+        imgVideoBack = mExoPlayerView.findViewById(R.id.cinema_player_back_button);
+        imgVideoBack.setOnTouchListener(this);
 
         mBtnMute = mExoPlayerView.findViewById(R.id.btnMute);
         mBtnFullScreen = mExoPlayerView.findViewById(R.id.btnFullScreen);
@@ -411,23 +429,38 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
                 return true;
             }
 
-            if (view.getId() == R.id.btnMute) {
-                if (mPlayer.isPlayingAd()) {
-                    isVideoMuted = isAdMuted = !isAdMuted;
-                } else {
-                    isAdMuted = isVideoMuted = !isVideoMuted;
-                }
-                ((ImageView) view).setImageResource(isVideoMuted ? R.drawable.ic_action_mute : R.drawable.ic_action_volume_up);
-                updateMutedStatus();
+            if (view.getId() == R.id.cinema_player_back_button) {
                 if (mExoPlayerListener != null) {
-                    mExoPlayerListener.onMuteStateChanged(isVideoMuted);
+                    mExoPlayerListener.onVideoBackBtnTap();
                 }
+                return true;
+            }
+
+            if (view.getId() == R.id.btnMute) {
+                updateVolume();
                 return true;
             }
         }
 
         FrameLayout layout = mExoPlayerView.getOverlayFrameLayout();
         return layout != null && view.getId() == layout.getId();
+    }
+
+    public void updateVolume() {
+        if (mPlayer.isPlayingAd()) {
+            isVideoMuted = isAdMuted = !isAdMuted;
+        } else {
+            isAdMuted = isVideoMuted = !isVideoMuted;
+        }
+        updateMutedStatus();
+        if (mExoPlayerListener != null) {
+            mExoPlayerListener.onMuteStateChanged(isVideoMuted);
+        }
+    }
+
+    public boolean isVideoMuted()
+    {
+        return isVideoMuted;
     }
 
     private void addSavedInstanceState(Bundle savedInstanceState)
@@ -549,6 +582,12 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         public Builder setTagUrl(String tagUrl)
         {
             mExoPlayerHelper.mTagUrl = tagUrl;
+            return this;
+        }
+
+        public Builder setVideoName(String videoName)
+        {
+            mExoPlayerHelper.txtVideoName.setText(videoName);
             return this;
         }
 
@@ -1068,7 +1107,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
 
         if (mExoPlayerListener != null) {
-            mExoPlayerListener.onPlayerError(errorString);
+            mExoPlayerListener.onPlayerError(e.type, errorString);
         }
     }
 

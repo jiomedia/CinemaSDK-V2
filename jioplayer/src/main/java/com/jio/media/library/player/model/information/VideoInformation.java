@@ -6,12 +6,23 @@ public class VideoInformation implements Serializable
 {
     private String url;
     private String name;
+    private String contentId;
     private String videoTitle;
     private String videoSubTitle;
     private String videoDescription;
     private String bannerImage;
     private String urlRedirect;
     private String urlDownload;
+
+    public String getContentId()
+    {
+        return contentId;
+    }
+
+    public void setContentId(String contentId)
+    {
+        this.contentId = contentId;
+    }
 
     public String getUrlRedirect()
     {

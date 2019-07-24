@@ -20,6 +20,7 @@ import java.util.HashMap;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 
+import static com.jio.media.library.player.analytics.AnalyticsConstant.JCANALYTICSEVENT_BANNER_REDIRECTION;
 import static com.jio.media.library.player.analytics.AnalyticsConstant.JCANALYTICSEVENT_LOGIN;
 import static com.jio.media.library.player.analytics.AnalyticsConstant.JCANALYTICSEVENT_MEDIAEND;
 import static com.jio.media.library.player.analytics.AnalyticsConstant.JCANALYTICSEVENT_MEDIAERROR;
@@ -254,7 +255,6 @@ public class AnalyticsEvent implements INetworkResultListener
         WebServiceConnector.getInstance().sendEventForInternalAnalytics(this, 200, eventHashMap);
     }
 
-    //10. media_error event
     public HashMap<String, Object> getMediaErrorEventForInternalAnalytics(String bitrate, String quality, int type, String cid, int code, String msg, String desc, String failure)
     {
         HashMap<String, Object> eventHashMap = new HashMap<>();
@@ -273,6 +273,20 @@ public class AnalyticsEvent implements INetworkResultListener
     public void sendMediaErrorEventForInternalAnalytics(String bitrate, String quality, int type, String cid, int code, String msg, String desc, String failure)
     {
         HashMap<String, Object> eventHashMap = getMediaErrorEventForInternalAnalytics(bitrate, quality, type, cid, code, msg, desc, failure);
+        WebServiceConnector.getInstance().sendEventForInternalAnalytics(this, 200, eventHashMap);
+    }
+
+    public HashMap<String, Object> getBannerRedirectionEventForInternalAnalytics(String downloadnow)
+    {
+        HashMap<String, Object> eventHashMap = new HashMap<>();
+        eventHashMap.put("downloadnow", downloadnow);
+        Logger.d("banner_redirection_event" + new JSONObject(eventHashMap));
+        return getFinalEventHashMap(eventHashMap, JCANALYTICSEVENT_BANNER_REDIRECTION);
+    }
+
+    public void sendBannerRedirectionEventForInternalAnalytics(String downloadnow)
+    {
+        HashMap<String, Object> eventHashMap = AnalyticsEvent.getInstance().getBannerRedirectionEventForInternalAnalytics(downloadnow);
         WebServiceConnector.getInstance().sendEventForInternalAnalytics(this, 200, eventHashMap);
     }
 
