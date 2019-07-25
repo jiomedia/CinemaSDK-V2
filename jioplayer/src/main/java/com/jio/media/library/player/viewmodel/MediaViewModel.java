@@ -174,6 +174,7 @@ public class MediaViewModel extends AndroidViewModel implements INetworkResultLi
     }
 
     private void refreshToken(boolean isZla) {
+        Logger.d("Refresh SSO Request"+ getRefreshJsonData(isZla));
         WebServiceConnector.getInstance().getRefreshTokenData(this, REFRESH_SSO, getRefreshJsonData(isZla));
     }
 
