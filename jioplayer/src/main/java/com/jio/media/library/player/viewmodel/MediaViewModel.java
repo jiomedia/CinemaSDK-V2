@@ -1,11 +1,10 @@
 package com.jio.media.library.player.viewmodel;
 
 import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 import com.jio.media.library.player.analytics.AnalyticsEvent;
@@ -146,12 +145,16 @@ public class MediaViewModel extends AndroidViewModel implements INetworkResultLi
                     videoInformation.setName(playBackRights.getContentName());
                     videoInformation.setUrl(playBackRights.getVideo().getAuto());
                     if (configResponse != null) {
-                        videoInformation.setVideoTitle(configResponse.getUrl().getAutoPlay().getVideoTitle());
-                        videoInformation.setVideoSubTitle(configResponse.getUrl().getAutoPlay().getVideoSubTitle());
-                        videoInformation.setVideoDescription(configResponse.getUrl().getAutoPlay().getVideoDesc());
-                        videoInformation.setBannerImage(configResponse.getUrl().getImage()+configResponse.getUrl().getAutoPlay().getBannerImage());
-                        videoInformation.setUrlDownload(configResponse.getUrl().getAutoPlay().getJCdownload());
-                        videoInformation.setUrlRedirect(configResponse.getUrl().getAutoPlay().getJCredirect());
+                        AutoPlay autoPlay = configResponse.getUrl().getAutoPlay();
+                        if (autoPlay != null) {
+                            videoInformation.setContentId(autoPlay.getContentId());
+                            videoInformation.setVideoTitle(autoPlay.getVideoTitle());
+                            videoInformation.setVideoSubTitle(autoPlay.getVideoSubTitle());
+                            videoInformation.setVideoDescription(autoPlay.getVideoDesc());
+                            videoInformation.setBannerImage(configResponse.getUrl().getImage()+autoPlay.getBannerImage());
+                            videoInformation.setUrlDownload(autoPlay.getJCdownload());
+                            videoInformation.setUrlRedirect(autoPlay.getJCredirect());
+                        }
                     }
                     informationLiveData.setValue(videoInformation);
                 }
@@ -171,6 +174,7 @@ public class MediaViewModel extends AndroidViewModel implements INetworkResultLi
     }
 
     private void refreshToken(boolean isZla) {
+        Logger.d("Refresh SSO Request"+ getRefreshJsonData(isZla));
         WebServiceConnector.getInstance().getRefreshTokenData(this, REFRESH_SSO, getRefreshJsonData(isZla));
     }
 

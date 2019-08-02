@@ -12,6 +12,7 @@ public interface AnalyticsConstant {
     String JCANALYTICSEVENT_MEDIASTART         = "media_start";
     String JCANALYTICSEVENT_MEDIAERROR         = "media_error";
     String JCANALYTICSEVENT_MEDIAEND           = "media_end";
+    String JCANALYTICSEVENT_BANNER_REDIRECTION = "banner_redirection";
 
     //Analytics Events Url
     String JCANALYTICSEVENT_URL                = "https://collect.media.jio.com/postdata/event";
