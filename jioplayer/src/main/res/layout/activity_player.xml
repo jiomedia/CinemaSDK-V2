@@ -33,7 +33,7 @@
                     android:orientation="horizontal"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="#FFFFFF"
+                    android:background="@color/BlackThemeBGColour"
                     android:layout_weight="1"
                     android:id="@+id/infoContainer"
                     android:gravity="center_vertical">
@@ -48,7 +48,7 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:textColor="#000000"
+                            android:textColor="@color/MetadataHeadingTextColour"
                             android:textSize="16sp"
                             android:maxLines="1"
                             android:id="@+id/videoTitle"
@@ -56,7 +56,7 @@
                             android:layout_height="wrap_content" />
 
                         <TextView
-                            android:textColor="#80000000"
+                            android:textColor="@color/MetadataSubheadingTextColour"
                             android:textSize="14sp"
                             android:maxLines="1"
                             android:id="@+id/videoSubTitle"
@@ -68,7 +68,7 @@
                         android:id="@+id/btnMediaClose"
                         android:padding="8dp"
                         android:contentDescription="@string/app_name"
-                        android:src="@drawable/baseline_close_black_36"
+                        android:src="@drawable/ic_close_black_24dp"
                         android:layout_width="40dp"
                         android:layout_height="40dp" />
                 </LinearLayout>
@@ -77,14 +77,14 @@
 
             <LinearLayout
                 android:id="@+id/metadataInfo"
-                android:background="#FFFFFF"
+                android:background="@color/BlackThemeBGColour"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="8dp">
 
                 <TextView
-                    android:textColor="#000000"
+                    android:textColor="@color/MetadataHeadingTextColour"
                     android:textSize="16sp"
                     android:paddingBottom="4dp"
                     android:id="@+id/videoMetadataTitle"
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:textColor="#80000000"
+                    android:textColor="@color/MetadataSubheadingTextColour"
                     android:textSize="14sp"
                     android:id="@+id/videoDescription"
                     android:layout_width="match_parent"
@@ -114,7 +114,7 @@
                     android:background="@drawable/banner_border">
 
                     <TextView
-                        android:textColor="#80000000"
+                        android:textColor="@color/MetadataHeadingTextColour"
                         android:textSize="14sp"
                         android:layout_weight="1"
                         android:text="NEW ON JIOCINEMA"
@@ -130,7 +130,7 @@
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:textSize="14dp"
-                        android:textColor="#D81B60"
+                        android:textColor="@color/MetadataHeadingTextColour"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/button_border"/>

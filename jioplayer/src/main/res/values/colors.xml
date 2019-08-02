@@ -6,5 +6,8 @@
     <color name="mediaPlayedColor">#FFFF0000</color>
     <color name="mediaUnplayedColor">#77FFFFFF</color>
     <color name="mediaBufferedColor">#FFFFFFFF</color>
-    <color name="mediaProgressBarColor">#303F9F</color>
+    <color name="HeaderColour">#8D0536</color>
+    <color name="BlackThemeBGColour">#1c1c1c</color>
+    <color name="MetadataHeadingTextColour">#FFFFFF </color>
+    <color name="MetadataSubheadingTextColour">#959595</color>
 </resources>
