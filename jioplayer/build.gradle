@@ -41,7 +41,7 @@ dependencies {
     api "com.google.android.exoplayer:exoplayer-dash:$exoPlayerVersion"
     api "com.google.android.exoplayer:extension-ima:$exoPlayerVersion"
 
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
