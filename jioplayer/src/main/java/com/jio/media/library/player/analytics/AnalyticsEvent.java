@@ -185,7 +185,7 @@ public class AnalyticsEvent implements INetworkResultListener
         eventHashMap.put("audiochanged", audioChanged);
         eventHashMap.put("subtitlechanged", subtitleChanged);
         eventHashMap.put("subtitleviewed", subtitleviewed);
-        eventHashMap.put("quality", quality);
+        eventHashMap.put("Quality", quality);
         Logger.d("media_end_event" + new JSONObject(eventHashMap));
         return getFinalEventHashMap(eventHashMap, JCANALYTICSEVENT_MEDIAEND);
 
@@ -259,7 +259,7 @@ public class AnalyticsEvent implements INetworkResultListener
     {
         HashMap<String, Object> eventHashMap = new HashMap<>();
         eventHashMap.put("bitrate", bitrate);
-        eventHashMap.put("quality", quality);
+        eventHashMap.put("Quality", quality);
         eventHashMap.put("type", type);
         eventHashMap.put("cid", cid);
         eventHashMap.put("code", code);

@@ -38,4 +38,7 @@ interface ApiInterface
 
     @GET("sdk/apis/common/v2.7/getconfig/geturl/39ee6ded40812c593ed8")
     Call<ResponseBody> getConfig();
+
+    @POST("apis/common/v2.7/metamore/get/{contentID}")
+    Call<ResponseBody> getMetaMore(@Header("x-multilang") boolean multiLang,@Path("contentID") String contentId,@Body RequestBody uniqueId);
 }

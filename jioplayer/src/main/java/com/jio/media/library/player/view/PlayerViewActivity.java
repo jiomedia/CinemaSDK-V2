@@ -1,5 +1,6 @@
 package com.jio.media.library.player.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -20,28 +21,28 @@ import com.jio.media.library.player.MediaPlayerHelper;
 import com.jio.media.library.player.MediaPlayerListener;
 import com.jio.media.library.player.R;
 import com.jio.media.library.player.databinding.ActivityPlayerBinding;
-import com.jio.media.library.player.model.information.VideoInformation;
+import com.jio.media.library.player.model.metaMore.MetaMore;
 import com.jio.media.library.player.utils.Logger;
 import com.jio.media.library.player.utils.MediaUtils;
+import com.jio.media.library.player.viewmodel.MediaViewModel;
 
-public class PlayerViewActivity extends AppCompatActivity implements MediaPlayerListener
-{
+public class PlayerViewActivity extends AppCompatActivity implements MediaPlayerListener {
     private ActivityPlayerBinding binding;
     private MediaPlayerHelper mediaPlayerHelper;
-    private VideoInformation videoInformation;
-
+    private String urlDownload, urlRedirect;
+    private MetaMore metaMore;
     private BottomSheetBehavior sheetBehavior;
 
     private LinearLayout.LayoutParams videoParams;
     private LinearLayout.LayoutParams infoParams;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_player);
         sheetBehavior = BottomSheetBehavior.from(binding.bottomSheet);
-
+        metaMore = new MetaMore();
+        MediaViewModel mediaViewModel = ViewModelProviders.of(this).get(MediaViewModel.class);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
         videoParams = (LinearLayout.LayoutParams) binding.videoView.getLayoutParams();
@@ -51,39 +52,48 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
 
         infoParams.height = (int) (getScreenHeight(this) * 0.096);
 
+
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().getExtras() != null) {
-                videoInformation = (VideoInformation) getIntent().getSerializableExtra("videoInformation");
-                if (videoInformation != null) {
+                metaMore = (MetaMore) getIntent().getSerializableExtra("metaMore");
+                String contentId = getIntent().getStringExtra("contentId");
+                String uniqueId = getIntent().getStringExtra("uniqueId");
+                urlDownload = getIntent().getStringExtra("urlDownload");
+                urlRedirect = getIntent().getStringExtra("urlRedirect");
+                if (metaMore != null) {
                     setPlayerView(savedInstanceState);
-                    binding.videoTitle.setText(videoInformation.getVideoTitle());
-                    binding.videoSubTitle.setText(videoInformation.getVideoSubTitle());
-                    binding.videoDescription.setText(videoInformation.getVideoDescription());
+                    mediaViewModel.getMataMoreDetails(uniqueId, contentId);
                     binding.videoView.setUseController(false);
-                    binding.videoMetadataTitle.setText(videoInformation.getVideoTitle());
                     updateVideoName(false);
-                    MediaUtils.showImage(binding.bannerImage, videoInformation.getBannerImage());
-
-                    if (isAppInstalled(PlayerViewActivity.this, "com.jio.media.ondemand")) {
-                        binding.btnJioCinemaDownload.setText("Watch Now");
-                    } else {
-                        binding.btnJioCinemaDownload.setText("Download Now");
-                    }
                 }
+                if (isAppInstalled(PlayerViewActivity.this, "com.jio.media.ondemand")) {
+                    binding.btnJioCinemaDownload.setText("Watch Now");
+                } else {
+                    binding.btnJioCinemaDownload.setText("Download Now");
+                }
+                //MediaUtils.showImage(binding.bannerImage, videoInformation.getBannerImage());
+
             }
         }
 
-        binding.btnJioCinemaDownload.setOnClickListener(new View.OnClickListener()
-        {
+        mediaViewModel.getMetaMoreLiveData().observe(this, metaMore -> {
+            binding.videoTitle.setText(metaMore.getName());
+            binding.videoSubTitle.setText(metaMore.getSubtitle());
+            binding.videoDescription.setText(metaMore.getDescription());
+            binding.videoMetadataTitle.setText(metaMore.getName());
+            MediaUtils.showImage(binding.bannerImage, metaMore.getBanner());
+
+        });
+
+        binding.btnJioCinemaDownload.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 try {
-                    if (videoInformation != null) {
+                    if (urlDownload != null && urlRedirect != null) {
                         if (isAppInstalled(PlayerViewActivity.this, "com.jio.media.ondemand")) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoInformation.getUrlRedirect())));
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlRedirect)));
                         } else {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoInformation.getUrlDownload())));
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlDownload)));
                         }
                     }
                 } catch (Exception e) {
@@ -92,20 +102,16 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             }
         });
 
-        binding.btnMediaClose.setOnClickListener(new View.OnClickListener()
-        {
+        binding.btnMediaClose.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 PlayerViewActivity.this.finish();
             }
         });
 
-        binding.bottomSheet.setOnClickListener(new View.OnClickListener()
-        {
+        binding.bottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 } else {
@@ -114,11 +120,9 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             }
         });
 
-        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback()
-        {
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState)
-            {
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE && newState == BottomSheetBehavior.STATE_DRAGGING) {
                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -136,8 +140,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             }
 
             @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset)
-            {
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 Logger.d("slideOffset: " + slideOffset);
                 if (slideOffset > 0.3) {
                     videoParams.width = getScreenWidth(PlayerViewActivity.this);
@@ -150,11 +153,11 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
                 }
             }
         });
+
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         if (mediaPlayerHelper != null && mediaPlayerHelper.isFullMode()) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         } else {
@@ -162,8 +165,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    public boolean isAppInstalled(Context context, String packageName)
-    {
+    public boolean isAppInstalled(Context context, String packageName) {
         try {
             context.getPackageManager().getApplicationInfo(packageName, 0);
             return true;
@@ -172,23 +174,20 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    public static int getScreenWidth(Context context)
-    {
+    public static int getScreenWidth(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((PlayerViewActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.widthPixels;
     }
 
-    public static int getScreenHeight(Context context)
-    {
+    public static int getScreenHeight(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((PlayerViewActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
 
     @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig)
-    {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -202,32 +201,28 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    private void updateVideoName(boolean isVisble)
-    {
-        if (mediaPlayerHelper != null)
-        {
+    private void updateVideoName(boolean isVisble) {
+        if (mediaPlayerHelper != null) {
             mediaPlayerHelper.updateVideoName(isVisble);
         }
     }
 
-    private void setPlayerView(@Nullable Bundle savedInstanceState)
-    {
+    private void setPlayerView(@Nullable Bundle savedInstanceState) {
         mediaPlayerHelper = new MediaPlayerHelper.Builder(this, binding.videoView)
-                .setVideoUrls(videoInformation.getUrl())
+                .setVideoUrls(metaMore.getUrl())
                 .setRepeatModeOn(true)
                 .setAutoPlayOn(true)
                 .addSavedInstanceState(savedInstanceState)
                 .setFullScreenBtnVisible()
                 .setMuteBtnVisible()
-                .setVideoName(videoInformation.getName())
+                .setVideoName(metaMore.getName())
                 .addMuteButton(true, true)
                 .setUiControllersVisibility(true)
                 .setExoPlayerEventsListener(this)
                 .createAndPrepare();
     }
 
-    private void orientationPortrait()
-    {
+    private void orientationPortrait() {
         if (mediaPlayerHelper != null) {
             mediaPlayerHelper.setFullMode(false);
             videoParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -236,8 +231,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    private void orientationLandscape()
-    {
+    private void orientationLandscape() {
         if (mediaPlayerHelper != null) {
             mediaPlayerHelper.setFullMode(true);
             videoParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -247,140 +241,118 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState)
-    {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         mediaPlayerHelper.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         mediaPlayerHelper.onActivityStart();
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         mediaPlayerHelper.onActivityResume();
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         mediaPlayerHelper.onActivityPause();
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
         mediaPlayerHelper.onActivityStop();
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         mediaPlayerHelper.onActivityDestroy();
     }
 
     @Override
-    public void onLoadingStatusChanged(boolean isLoading, long bufferedPosition, int bufferedPercentage)
-    {
+    public void onLoadingStatusChanged(boolean isLoading, long bufferedPosition, int bufferedPercentage) {
 
     }
 
     @Override
-    public void onPlayerPlaying(int currentWindowIndex)
-    {
+    public void onPlayerPlaying(int currentWindowIndex) {
 
     }
 
     @Override
-    public void onPlayerPaused(int currentWindowIndex)
-    {
+    public void onPlayerPaused(int currentWindowIndex) {
 
     }
 
     @Override
-    public void onPlayerBuffering(int currentWindowIndex)
-    {
+    public void onPlayerBuffering(int currentWindowIndex) {
 
     }
 
     @Override
-    public void onPlayerStateEnded(int currentWindowIndex)
-    {
+    public void onPlayerStateEnded(int currentWindowIndex) {
 
     }
 
     @Override
-    public void onPlayerStateIdle(int currentWindowIndex)
-    {
+    public void onPlayerStateIdle(int currentWindowIndex) {
 
     }
 
     @Override
-    public void onPlayerError(int code, String errorString)
-    {
+    public void onPlayerError(int code, String errorString) {
 
     }
 
     @Override
-    public void createExoPlayerCalled(boolean isToPrepare)
-    {
+    public void createExoPlayerCalled(boolean isToPrepare) {
 
     }
 
     @Override
-    public void releaseExoPlayerCalled()
-    {
+    public void releaseExoPlayerCalled() {
 
     }
 
     @Override
-    public void onVideoResumeDataLoaded(int window, long position, boolean isResumeWhenReady)
-    {
+    public void onVideoResumeDataLoaded(int window, long position, boolean isResumeWhenReady) {
 
     }
 
     @Override
-    public void onTracksChanged(int currentWindowIndex, int nextWindowIndex, boolean isPlayBackStateReady)
-    {
+    public void onTracksChanged(int currentWindowIndex, int nextWindowIndex, boolean isPlayBackStateReady) {
 
     }
 
     @Override
-    public void onMuteStateChanged(boolean isMuted)
-    {
+    public void onMuteStateChanged(boolean isMuted) {
 
     }
 
     @Override
-    public void onVideoTapped()
-    {
+    public void onVideoTapped() {
         Logger.d("onVideoTapped");
     }
 
     @Override
-    public boolean onPlayBtnTap()
-    {
+    public boolean onPlayBtnTap() {
         return false;
     }
 
     @Override
-    public boolean onPauseBtnTap()
-    {
+    public boolean onPauseBtnTap() {
         return false;
     }
 
     @Override
-    public void onFullScreenBtnTap()
-    {
+    public void onFullScreenBtnTap() {
         if (mediaPlayerHelper.isFullMode()) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         } else {
@@ -389,8 +361,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     }
 
     @Override
-    public void onVideoBackBtnTap()
-    {
+    public void onVideoBackBtnTap() {
         onBackPressed();
     }
 }
