@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -73,44 +73,27 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             }
         }
 
-        binding.btnJioCinemaDownload.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                try {
-                    if (videoInformation != null) {
-                        if (isAppInstalled(PlayerViewActivity.this, "com.jio.media.ondemand")) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoInformation.getUrlRedirect())));
-                        } else {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoInformation.getUrlDownload())));
-                        }
+        binding.btnJioCinemaDownload.setOnClickListener(view -> {
+            try {
+                if (videoInformation != null) {
+                    if (isAppInstalled(PlayerViewActivity.this, "com.jio.media.ondemand")) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoInformation.getUrlRedirect())));
+                    } else {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoInformation.getUrlDownload())));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        binding.btnMediaClose.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                PlayerViewActivity.this.finish();
-            }
-        });
+        binding.btnMediaClose.setOnClickListener(view -> PlayerViewActivity.this.finish());
 
-        binding.bottomSheet.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
+        binding.bottomSheet.setOnClickListener(view -> {
+            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            } else {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
 

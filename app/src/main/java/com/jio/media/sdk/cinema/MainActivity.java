@@ -1,13 +1,12 @@
 package com.jio.media.sdk.cinema;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -45,26 +44,14 @@ public class MainActivity extends AppCompatActivity
                 "    \"ssoExpired\": false\n" +
                 "}");
 
-        mediaViewModel.getInformationLiveData().observe(this, new Observer<VideoInformation>()
-        {
-            @Override
-            public void onChanged(VideoInformation videoInformation)
-            {
-                Intent intent = new Intent(MainActivity.this, PlayerViewActivity.class);
-                intent.putExtra("videoInformation", videoInformation);
-                startActivity(intent);
-            }
+        mediaViewModel.getInformationLiveData().observe(this, videoInformation -> {
+            Intent intent = new Intent(MainActivity.this, PlayerViewActivity.class);
+            intent.putExtra("videoInformation", videoInformation);
+            startActivity(intent);
         });
 
         Button btnCLick = findViewById(R.id.btnCLick);
-        btnCLick.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Logger.d("btnClicked");
-            }
-        });
+        btnCLick.setOnClickListener(view -> Logger.d("btnClicked"));
     }
 
     @Override
