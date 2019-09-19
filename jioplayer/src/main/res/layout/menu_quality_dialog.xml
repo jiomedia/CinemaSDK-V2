@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="328dp"
+    android:background="@color/cinema_background_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/dialogTitleQuality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/dialogTitleTxt"
+            style="?attr/applicationTextColor"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/videoQuality"
+            android:textColor="@color/cinema_white"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrolllViewRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottombarLayout"
+        android:layout_below="@+id/dialogTitleQuality">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.jio.media.library.player.utils.CustomRadioGroup
+                android:id="@+id/qualityRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:orientation="vertical"/>
+
+            <CheckBox
+                android:id="@+id/rememberMeBox"
+                style="?attr/applicationTextColor"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:button="@drawable/checkbox_grey_selector"
+                android:paddingLeft="21dp"
+                android:text="@string/checkSettings"
+                android:textColor="@color/cinema_white" />
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/bottombarLayout"
+        android:layout_marginTop="15dp"
+        android:background="@color/cinema_unselectedTabColor" />
+
+    <LinearLayout
+        android:id="@+id/bottombarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="?attr/applicationTextColor"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/review_selector"
+            android:text="@string/Cancle"
+            android:textAllCaps="true"
+            android:textColor="@color/cinema_white"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/cinema_unselectedTabColor" />
+
+        <Button
+            android:id="@+id/btnOk"
+            style="?attr/applicationTextColor"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/backOk_Height"
+            android:layout_weight="1"
+            android:background="@drawable/review_selector"
+            android:text="@string/ok"
+            android:textAllCaps="true"
+            android:textColor="@color/cinema_white"
+            android:textSize="16dp" />
+    </LinearLayout>
+</RelativeLayout>
