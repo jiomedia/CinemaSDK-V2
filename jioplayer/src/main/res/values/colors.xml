@@ -11,4 +11,25 @@
     <color name="MetadataHeadingTextColour">#FFFFFF </color>
     <color name="MetadataSubheadingTextColour">#959595</color>
     <color name="mediaProgressBarColor">#D9008D</color>
+
+
+    <color name="cinema_colorPrimary">#3F51B5</color>
+    <color name="cinema_colorPrimaryDark">#303F9F</color>
+    <color name="cinema_colorAccent">#FF4081</color>
+    <color name="cinema_player_background">#80000000</color>
+    <color name="cinema_transparent">#00000000</color>
+    <color name="cinema_globalWhiteColor">#FFFFFF</color>
+    <color name="cinema_alphaBlackTransparent">#000000ff</color>
+    <color name="cinema_unselectedTabColor">#969696</color>
+    <color name="cinema_filterScreenColorPinkCode">#D9008D</color>
+    <color name="cinema_white">#FFFFFF</color>
+    <color name="cinema_homeTitleTextColorWhite">#ffffff</color>
+    <color name="cinema_opacityWhite">#b3616161</color>
+    <color name="cinema_background_color">#1C1C1C</color>
+    <color name="cinema_statusBar_color">#8D0536</color>
+
+    <!-- MultiAudio -->
+    <color name="cinema_subtitleTextColor">#ffffff</color>
+    <color name="cinema_colorDisneyAccent">#3aaebd</color>
+    <color name="cinema_colorDisneyPrimary">#63696F</color>
 </resources>

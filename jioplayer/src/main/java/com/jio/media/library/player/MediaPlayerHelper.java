@@ -3,6 +3,7 @@ package com.jio.media.library.player;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,8 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.ads.interactivemedia.v3.api.AdEvent;
@@ -47,7 +49,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSinkFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
@@ -56,6 +58,11 @@ import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvicto
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
+import com.jio.media.library.player.dialog.MediaAudioSubtitleDialog;
+import com.jio.media.library.player.dialog.MediaQualityDialog;
+import com.jio.media.library.player.utils.Logger;
+import com.jio.media.library.player.utils.MediaQuailty;
+import com.jio.media.library.player.utils.SharedPreferencesManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,8 +70,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings("WeakerAccess")
 public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchListener,
-        MediaPlayerControl, MediaPlayerStatus, Player.EventListener, ImaAdsLoader.VideoAdPlayerCallback,
-        AdsMediaSource.MediaSourceFactory, AdEvent.AdEventListener
+        MediaPlayerControl, MediaPlayerStatus, Player.EventListener, ImaAdsLoader.VideoAdPlayerCallback, AdsMediaSource.MediaSourceFactory, AdEvent.AdEventListener , MediaAudioSubtitleDialog.IMenuAudioSelectedCallBack , MediaQualityDialog.IMenuQualitySelectedCallback , DialogInterface.OnDismissListener
 {
 
     public static final String PARAM_AUTO_PLAY = "PARAM_AUTO_PLAY";
@@ -85,11 +91,27 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     private MediaPlayerListener mExoPlayerListener;
     private MediaThumbListener mExoThumbListener;
 
+    private MediaAudioSubtitleDialog mMediaAudioSubtitleDialog;
+    private MediaSource mediaSourceFactory;
+    String subtiltle = "";
+    private String subTitleViewed;
+    private boolean isVisible;
+
+    private MediaQualityDialog mMediaQualityDialog;
+    private boolean _isRememberMySettingChecked = true;
+    private String videoProfileUrl;
+    private Uri uri;
+    private String lowUrl, highUrl, mediumUrl, autoUrl, contentId;
+    private String _qualitySelected = MediaQuailty.Auto.getQuality();
+    private static final String USER_QUALITY_SELECTED_KEY = "qualityselected";
+
     private ProgressBar mProgressBar;
     private ImageView mBtnMute;
     private ImageView mBtnFullScreen;
     private ImageView mThumbImage;
     private ImageView imgVideoBack;
+    private ImageView audioSubtitle;
+    private ImageView setting;
     private TextView txtVideoName;
 
     private Uri[] mVideosUris;
@@ -145,6 +167,17 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         }
     }
 
+    private void playSubtitle() {
+        DefaultHttpDataSourceFactory defaultHttpDataSource = new DefaultHttpDataSourceFactory("JioOnDemand/1.5.3.2.P.20190131.1 (Linux;Android 9) Jio");
+        String fullUrl_subtiltle = "http://jioimages.cdn.jio.com/content/entry/data/" + subtiltle;
+        Format textFormat = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP,
+                null, Format.NO_VALUE, Format.NO_VALUE, "en", null, Format.NO_VALUE);
+        MediaSource textMediaSource = new SingleSampleMediaSource.Factory(defaultHttpDataSource).createMediaSource(Uri.parse(fullUrl_subtiltle), textFormat, C.TIME_UNSET);
+        MediaSource mediaSourceWithText = new MergingMediaSource(mediaSourceFactory, textMediaSource);
+        mPlayer.prepare(mediaSourceWithText);
+    }
+
+
     private void addProgressBar(int color)
     {
         FrameLayout frameLayout = mExoPlayerView.getOverlayFrameLayout();
@@ -185,15 +218,51 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         mExoPlayerView.findViewById(R.id.exo_pause).setOnTouchListener(this);
 
         imgVideoBack = mExoPlayerView.findViewById(R.id.cinema_player_back_button);
-        imgVideoBack.setOnTouchListener(this);
-
+        audioSubtitle = mExoPlayerView.findViewById(R.id.cinema_audioSubtitle_button);
+        setting = mExoPlayerView.findViewById(R.id.cinema_setting_button);
         mBtnMute = mExoPlayerView.findViewById(R.id.btnMute);
         mBtnFullScreen = mExoPlayerView.findViewById(R.id.btnFullScreen);
+
+        imgVideoBack.setOnTouchListener(this);
+        audioSubtitle.setOnTouchListener(this);
+        setting.setOnTouchListener(this);
         mBtnMute.setOnTouchListener(this);
         mBtnFullScreen.setOnTouchListener(this);
     }
 
+    private  void initializePlayer(){
+        try{
+            videoProfileUrl = getVideoUrl(MediaQuailty.getMediaQuality(_qualitySelected));
+            uri = Uri.parse(videoProfileUrl);
+            playSubtitle();
+        }catch (Exception e){
 
+        }
+    }
+
+    public String getVideoUrl(MediaQuailty mediaQuailty) {
+        String videoProfileUrl = autoUrl;
+        if (mediaQuailty != null) {
+            switch (mediaQuailty) {
+                case Auto:
+                    videoProfileUrl = autoUrl;
+                    break;
+
+                case Low:
+                    videoProfileUrl = lowUrl;
+                    break;
+
+                case Medium:
+                    videoProfileUrl = mediumUrl;
+                    break;
+
+                case High:
+                    videoProfileUrl = highUrl;
+                    break;
+            }
+        }
+        return videoProfileUrl;
+    }
     private void init()
     {
         // Measures bandwidth during playback. Can be null if not required.
@@ -436,6 +505,31 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
                 return true;
             }
 
+            if (view.getId() == R.id.cinema_audioSubtitle_button) {
+                if (mExoPlayerListener != null) {
+                    mMediaAudioSubtitleDialog = new MediaAudioSubtitleDialog(mContext,
+                            MediaPlayerHelper.this);
+                    Logger.d("setPlayWhenReady - false");
+                    mPlayer.setPlayWhenReady(false);
+                    mPlayer.getPlaybackState();
+                    mMediaAudioSubtitleDialog.setOnDismissListener(this);
+                    mMediaAudioSubtitleDialog.show();
+                }
+                return true;
+            }
+
+            if (view.getId() == R.id.cinema_setting_button) {
+                if (mExoPlayerListener != null) {
+                    mMediaQualityDialog = new MediaQualityDialog(mContext, MediaPlayerHelper.this, _qualitySelected, _isRememberMySettingChecked);
+                    Logger.d("setPlayWhenReady - false");
+                    mPlayer.setPlayWhenReady(false);
+                    mPlayer.getPlaybackState();
+                    mMediaQualityDialog.setOnDismissListener(this);
+                    mMediaQualityDialog.show();
+                }
+                return true;
+            }
+
             if (view.getId() == R.id.btnMute) {
                 updateVolume();
                 return true;
@@ -444,6 +538,87 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
         FrameLayout layout = mExoPlayerView.getOverlayFrameLayout();
         return layout != null && view.getId() == layout.getId();
+    }
+
+    @Override
+    public void onAudioCancelClick() {
+
+    }
+
+    @Override
+    public void onAudioSelected(View view) {
+
+    }
+
+    @Override
+    public void updateView(RadioButton[] view) {
+
+    }
+
+    @Override
+    public void onDefaultSelected() {
+
+    }
+
+    @Override
+    public void onSubtitleSelected(MediaAudioSubtitleDialog.MediaSubtitle mediaSubtitle, int rbSubtitleValue) {
+        if (mediaSubtitle == MediaAudioSubtitleDialog.MediaSubtitle.Off) {
+            showHideSubTitle(false);
+            subTitleViewed = "off";
+            isVisible = false;
+        } else if (mediaSubtitle == MediaAudioSubtitleDialog.MediaSubtitle.English) {
+            subTitleViewed = "English";
+            showHideSubTitle(true);
+            isVisible = true;
+        }
+        mMediaAudioSubtitleDialog.dismiss();
+    }
+
+    public void showHideSubTitle(boolean isVisible) {
+
+        if (isVisible) {
+            mExoPlayerView.getSubtitleView().setVisibility(View.VISIBLE);
+        } else {
+            mExoPlayerView.getSubtitleView().setVisibility(View.GONE);
+        }
+
+    }
+
+
+    @Override
+    public void onQualityCancelClick() {
+
+    }
+
+    @Override
+    public void onQualitySelected(MediaQuailty mediaQuality, boolean toRemember) {
+        _isRememberMySettingChecked = toRemember;
+        if (toRemember) {
+            saveUserQualityPrefrence(mContext, mediaQuality.getQuality());
+        }
+        if (_qualitySelected == null || !_qualitySelected.equalsIgnoreCase(mediaQuality.getQuality())) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            _qualitySelected = mediaQuality.getQuality();
+            pausePlayer();
+            releasePlayer();
+           initializePlayer();
+            setIsRememberMySettingChecked(toRemember);
+        }
+    }
+
+    public void pausePlayer() {
+        Logger.d("setPlayWhenReady - false");
+        mPlayer.setPlayWhenReady(false);
+        mPlayer.getPlaybackState();
+    }
+
+    private void saveUserQualityPrefrence(Context context, String qualitySelected) {
+        SharedPreferencesManager.get(context).setString(USER_QUALITY_SELECTED_KEY, qualitySelected);
+        Log.d("shared", "onClick" + SharedPreferencesManager.get(context).getString(USER_QUALITY_SELECTED_KEY));
+    }
+
+    public void setIsRememberMySettingChecked(boolean _isRememberMySettingChecked) {
+        this._isRememberMySettingChecked = _isRememberMySettingChecked;
     }
 
     public void updateVolume() {
@@ -544,6 +719,14 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     {
         this.fullMode = fullMode;
     }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+
+        if(mPlayer!=null){
+            mPlayer.setPlayWhenReady(true);
+        }
+   }
 
     @SuppressWarnings("SameParameterValue")
     public static class Builder
@@ -787,6 +970,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         if (mPlayer != null) {
             updateResumePosition();
             removeThumbImageView();
+            mPlayer.setPlayWhenReady(false);
             mPlayer.release();
             mPlayer = null;
         }

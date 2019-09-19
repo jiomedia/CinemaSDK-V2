@@ -4,4 +4,23 @@
     <item name="y_scale_factor" format="float" type="dimen">2.3</item>
     <dimen name="top_fragment_height">200dip</dimen>
     <dimen name="top_fragment_margin">10dip</dimen>
+
+    <!-- MultiAudioSubtitle -->
+
+    <dimen name="multiaudioRadioButtonSpace">22dp</dimen>
+    <dimen name="audio_title_margin">20dp</dimen>
+    <dimen name="audio_subtitle_text_size">20dp</dimen>
+    <dimen name="radioGroupBottomMargin">10dp</dimen>
+    <dimen name="popupTitleMargin">20dp</dimen>
+    <dimen name="backOk_Height">50dp</dimen>
+    <dimen name="buttonTextSize">16dp</dimen>
+    <dimen name="radioButtonMarginTop">31dp</dimen>
+    <dimen name="radioButtonPaddingLeft">24dp</dimen>
+    <dimen name="radioButtonTextSize">24dp</dimen>
+    <dimen name="radiobutton_space">22dp</dimen>
+    <dimen name="audioSubtitleDialogWidth">300dp</dimen>
+    <dimen name="marginfortopview">08dp</dimen>
+    <dimen name="bitratewidth">300dp</dimen>
+
+
 </resources>
