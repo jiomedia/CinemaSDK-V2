@@ -1,6 +1,6 @@
 package com.jio.media.library.player.network;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.jio.media.library.player.utils.Logger;
 
