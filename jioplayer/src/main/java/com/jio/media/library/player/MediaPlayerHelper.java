@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.ads.interactivemedia.v3.api.AdEvent;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -28,7 +27,6 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.audio.AudioAttributes;
-import com.google.android.exoplayer2.ext.ima.ImaAdsLoader;
 import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer;
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
@@ -38,7 +36,6 @@ import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.ads.AdsMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -64,8 +61,8 @@ import java.util.ArrayList;
 
 @SuppressWarnings("WeakerAccess")
 public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchListener,
-        MediaPlayerControl, MediaPlayerStatus, Player.EventListener, ImaAdsLoader.VideoAdPlayerCallback,
-        AdsMediaSource.MediaSourceFactory, AdEvent.AdEventListener
+        MediaPlayerControl, MediaPlayerStatus, Player.EventListener/*, ImaAdsLoader.VideoAdPlayerCallback,
+        AdsMediaSource.MediaSourceFactory, AdEvent.AdEventListener*/
 {
 
     public static final String PARAM_AUTO_PLAY = "PARAM_AUTO_PLAY";
@@ -77,12 +74,10 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
     private PlayerView mExoPlayerView;
     private SimpleExoPlayer mPlayer;
-    private ImaAdsLoader mImaAdsLoader;
     private DataSource.Factory mDataSourceFactory;
     private DefaultLoadControl mLoadControl;
     private MediaSource mMediaSource;
 
-    private MediaAdsListener mMediaAdListener;
     private MediaPlayerListener mExoPlayerListener;
     private MediaThumbListener mExoThumbListener;
 
@@ -246,7 +241,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
         mMediaSource = mediaSources.length == 1 ? mediaSources[0] : new ConcatenatingMediaSource(mediaSources);
 
-        addAdsToMediaSource();
+      //  addAdsToMediaSource();
     }
 
     private MediaSource addSubTitlesToMediaSource(MediaSource mediaSource, String subTitlesUrl)
@@ -276,7 +271,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         }
     }
 
-    private void addAdsToMediaSource()
+  /*  private void addAdsToMediaSource()
     {
         if (mMediaSource == null) {
             throw new IllegalStateException("setVideoUrls must be invoked before setTagUrl (mMediaSource is null)");
@@ -295,7 +290,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
         //Set player using adsLoader.setPlayer before preparing the player.
         mMediaSource = new AdsMediaSource(mMediaSource, mDataSourceFactory, mImaAdsLoader, mExoPlayerView);
-    }
+    }*/
 
     private void setProgressVisible(boolean visible)
     {
@@ -708,7 +703,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     @Override
     public void setExoAdListener(MediaAdsListener exoAdListener)
     {
-        mMediaAdListener = exoAdListener;
+        //mMediaAdListener = exoAdListener;
     }
 
     @Override
@@ -807,14 +802,14 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     @Override
     public void releaseAdsLoader()
     {
-        if (mImaAdsLoader != null) {
+        /*if (mImaAdsLoader != null) {
             mImaAdsLoader.release();
             mImaAdsLoader = null;
             FrameLayout layout = mExoPlayerView.getOverlayFrameLayout();
             if (layout != null) {
                 layout.removeAllViews();
             }
-        }
+        }*/
     }
 
     @Override
@@ -932,7 +927,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     @Override
     public void onActivityDestroy()
     {
-        releaseAdsLoader();
+        //releaseAdsLoader();
     }
 
     /**
@@ -1166,7 +1161,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
     }
 
-    @Override
+    /*@Override
     public void onPlay()
     {
         if (mMediaAdListener != null) {
@@ -1230,9 +1225,9 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         }
     }
 
-    /**
+    *//**
      * AdsMediaSource.MediaSourceFactory
-     */
+     *//*
     @Override
     public MediaSource createMediaSource(Uri uri)
     {
@@ -1259,5 +1254,5 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
                 mMediaAdListener.onAdClicked();
                 break;
         }
-    }
+    }*/
 }
