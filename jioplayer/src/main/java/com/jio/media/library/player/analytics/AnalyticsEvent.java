@@ -90,7 +90,7 @@ public class AnalyticsEvent implements INetworkResultListener
         HashMap<String, Object> finalHashMap = new HashMap<>();
         finalHashMap.put("appname", Utils.getAppName());
         finalHashMap.put("akey", "109153001");
-        finalHashMap.put("avn", BuildConfig.VERSION_CODE);
+        finalHashMap.put("avn", "1.0");
         finalHashMap.put("c", Utils.getCarrierName());
         getLoginData(finalHashMap);
         finalHashMap.put("did", Utils.getUDID());

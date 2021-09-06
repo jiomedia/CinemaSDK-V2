@@ -24,25 +24,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         MediaViewModel mediaViewModel = ViewModelProviders.of(this).get(MediaViewModel.class);
-        mediaViewModel.startMediaPlayer("{\n" +
-                "    \"deviceInfo\": {\n" +
-                "        \"consumptionDeviceName\": \"Mytablet\",\n" +
-                "        \"jToken\": \"671c8afede1a05fc2917f2abcbd07fdb.9a2ea38cf6b03d6001853e77ab3c5325f44ddea0892327b7747de265cbba73a465e417474933284b548aea6c7a0e10c6977e3d5135d6c53c3d4120a243cd04ef6b21fcc6d9ab4362be4221a993d96096b7a104c3cb9884b8150b6c92c9beea0b6713935867033538aa3b9b4cb75fe745a6ce69adf34638bef2d61729297aff9e689c7412ae042c751f7dc22876027f4c3500ef4670d9dd46fc5a283e0e439ec859a97200eacea8e251388faa9c899748b0bfc3075132c552ab194879db4a550ad3adb23ffe2766899ced91689185a38df32873bbd737ebe2bf0944abeb6afea3685ed573f0ae3283e64dfd5cc1b764c21b8ba477c2654683357bb9ae1cb8cb33e2037d5a7697a7c6f4f517604967b66e72abbcfafc32f6ee83da4f82820faf13abbf37294d6d1ed7bb8fad7cc3ddf68e6cb31fdc663dfdd2cc99910cfcad74e47538ee31b08f086b4523b2a06643900b987c21e1c2563cb212f59816fc74a826\",\n" +
-                "        \"info\": {\n" +
-                "            \"androidId\": \"488b63f3e19b59d6\",\n" +
-                "            \"mac\": \"02:00:00:00:00:00\",\n" +
-                "            \"type\": \"android\",\n" +
-                "            \"imsi\": \"\"\n" +
-                "        }\n" +
-                "    },\n" +
-                "    \"ssoToken\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1bmlxdWUiOiJlYTgyZGFiZC1iNTQxLTRmNjItOTdlNC03M2U2ZTYxM2I5MTQiLCJ1c2VyVHlwZSI6IlJJTHBlcnNvbiIsImF1dGhMZXZlbCI6IjEwIiwianRpIjoiMjRjZDgwYmYtODYyMC00MmFlLWE4MzctNmI0N2M3MDBkZGQzIiwiaWF0IjoxNTYwODU0ODk1fQ.9vFM_0d7drLB7MN459YiK0gnjipCFSjrQ-21PjTUe8E\",\n" +
-                "    \"subscriberId\": \"9000406895\",\n" +
-                "    \"uniqueId\": \"ea82dabd-b541-4f62-97e4-73e6e613b914\",\n" +
-                "    \"uId\": \"prerana.barve\",\n" +
-                "    \"name\": \"Prerana  Barve\",\n" +
-                "    \"loginType\": 2,\n" +
-                "    \"ssoExpired\": false\n" +
-                "}");
+        mediaViewModel.startMediaPlayer("{\"deviceInfo\":{\"consumptionDeviceName\":\"Mytablet\",\"jToken\":\"f1a7af76450b52dcbd77a83f5fa30116.2d66a2dcc8295111a775753e24d8aad8dae0312c6ccc6a50fb35a3c38cd6e7afb13f005832a6caf691b6b88811d6fbcfe0169f72cf7c69697f249c6b28aa03eac48461011b6b21b979699458dbb82354fa492e0f3920a630801752fc3a49aa059207a864dbae6c34fc1374664150f2f88066e982387c63262e04bcbe53f55bef1b66cdd8fc7bc911639fcd4b3ee16ff461955c5408a12683f273d62c913bcd8a1aa0f7c1ab425a13601fb6295bb3297c18751a9cb25580d2a242706195b80e7febf8ac16af37df9f2f43d040f80c387a1d59f61c033ccd236f7b1b5c7eb582ebe808a2027f659b8f25705b806caad7e86cbdb8d234f45607913b823d999f3b254647f3c3c16a748e611d1c4d7b6c6c356b1ab4da7450887c776267d5fb679341ea97081696f61525940d47455bc678bf98d37a8097829a9f976c050a6fe21ad5c725284ba10be4b14d14d0051d1ff6159c34a9a8f00b4d2f0f9d3195c68b260e\",\"info\":{\"androidId\":\"6c1aeec6741e29a8\",\"mac\":\"02:00:00:00:00:00\",\"type\":\"android\",\"imsi\":\"\"}},\"ssoToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1bmlxdWUiOiI0YmRiNzZiYS1lYjc2LTRlMTEtODhjZi1mZmQzMGY2ZjUwYmMiLCJ1c2VyVHlwZSI6IlJJTHBlcnNvbiIsImF1dGhMZXZlbCI6IjMwIiwiZGV2aWNlSWQiOiI4ZDc0YTcxYTdmZWY5ZWZmYWZhNmMwZTY0MDk3ZjdlNTg2OWYxNTNkYmM3ODlhZDJkNGE4YTQwNGJhODAxZDUwNzY2OTU4OWNkYjUzNmI4OTZkY2YzMDY0ZmM2M2IwYWVmOGIyODQyN2I2MjBjNTdiMTY4Njk5NzU3NDdhOTk1NSIsImp0aSI6ImU2Y2U5MDQxLTU2ZDItNGVjMi05NjE4LWJlNGY1ODAwZWNkZCIsImlhdCI6MTYzMDY1NTYyOX0.ZKCWsMZzL6Qp376MIcHSiaig97xTyNqr08Hi9DI2fck\",\"subscriberId\":\"9335729617\",\"uniqueId\":\"4bdb76ba-eb76-4e11-88cf-ffd30f6f50bc\",\"uId\":\"hussainchachuliya2\",\"name\":\"Hussain Chachuliya\",\"loginType\":3,\"ssoExpired\":false}");
 
         mediaViewModel.getInformationLiveData().observe(this, videoInformation -> {
             Intent intent = new Intent(MainActivity.this, PlayerViewActivity.class);
