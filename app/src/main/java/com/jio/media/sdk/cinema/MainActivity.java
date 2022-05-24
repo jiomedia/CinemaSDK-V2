@@ -13,8 +13,7 @@ import com.jio.media.library.player.utils.Logger;
 import com.jio.media.library.player.view.PlayerViewActivity;
 import com.jio.media.library.player.viewmodel.MediaViewModel;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
