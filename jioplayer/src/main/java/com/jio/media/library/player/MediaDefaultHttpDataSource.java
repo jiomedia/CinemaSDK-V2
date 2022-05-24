@@ -1,7 +1,10 @@
 package com.jio.media.library.player;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import androidx.annotation.Nullable;
+import androidx.core.util.Predicate;
+
 import android.text.TextUtils;
 
 import com.google.android.exoplayer2.C;
@@ -13,7 +16,6 @@ import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Log;
-import com.google.android.exoplayer2.util.Predicate;
 import com.google.android.exoplayer2.util.Util;
 import com.jio.media.library.player.token.TokenController;
 
@@ -289,6 +291,11 @@ public class MediaDefaultHttpDataSource extends BaseDataSource implements HttpDa
     }
 
     @Override
+    public int getResponseCode() {
+        return 0;
+    }
+
+    @Override
     public long open(DataSpec dataSpec) throws HttpDataSourceException
     {
         this.dataSpec = dataSpec;
@@ -327,7 +334,7 @@ public class MediaDefaultHttpDataSource extends BaseDataSource implements HttpDa
 
         // Check for a valid content type.
         String contentType = connection.getContentType();
-        if (contentTypePredicate != null && !contentTypePredicate.evaluate(contentType)) {
+        if (contentTypePredicate != null && !contentTypePredicate.test(contentType)) {
             closeConnectionQuietly();
             throw new InvalidContentTypeException(contentType, dataSpec);
         }
@@ -461,7 +468,7 @@ public class MediaDefaultHttpDataSource extends BaseDataSource implements HttpDa
         long position = dataSpec.position;
         long length = dataSpec.length;
         boolean allowGzip = dataSpec.isFlagSet(DataSpec.FLAG_ALLOW_GZIP);
-        boolean allowIcyMetadata = dataSpec.isFlagSet(DataSpec.FLAG_ALLOW_ICY_METADATA);
+        boolean allowIcyMetadata = dataSpec.isFlagSet(DataSpec.FLAG_ALLOW_GZIP);
 
         if (!allowCrossProtocolRedirects) {
             // HttpURLConnection disallows cross-protocol redirects, but otherwise performs redirection
@@ -621,6 +628,7 @@ public class MediaDefaultHttpDataSource extends BaseDataSource implements HttpDa
      * @param connection The open connection.
      * @return The extracted length, or {@link C#LENGTH_UNSET}.
      */
+    @SuppressLint("Range")
     private static long getContentLength(HttpURLConnection connection)
     {
         long contentLength = C.LENGTH_UNSET;
@@ -787,6 +795,7 @@ public class MediaDefaultHttpDataSource extends BaseDataSource implements HttpDa
     /**
      * Closes the current connection quietly, if there is one.
      */
+    @SuppressLint("Range")
     private void closeConnectionQuietly()
     {
         if (connection != null) {

@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,10 +24,8 @@ import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer;
-import com.google.android.exoplayer2.mediacodec.MediaCodecUtil;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -45,25 +42,15 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSinkFactory;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
-import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressWarnings("WeakerAccess")
 public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchListener,
-        MediaPlayerControl, MediaPlayerStatus, Player.EventListener/*, ImaAdsLoader.VideoAdPlayerCallback,
-        AdsMediaSource.MediaSourceFactory, AdEvent.AdEventListener*/
-{
+        MediaPlayerControl, MediaPlayerStatus, Player.EventListener {
 
     public static final String PARAM_AUTO_PLAY = "PARAM_AUTO_PLAY";
     public static final String PARAM_WINDOW = "PARAM_WINDOW";
@@ -196,8 +183,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(mContext).build();
 
         // Produces DataSource instances through which media data is loaded.
-        mDataSourceFactory = new MediaDefaultDataSourceFactory(mContext, Util.getUserAgent(mContext, mContext.getString(R.string.app_name)), bandwidthMeter);
-
+        mDataSourceFactory = new MediaDefaultDataSourceFactory(mContext, "JioCinema/1.9.0.5 (Linux;Android 11) ExoPlayerLib/2.12.2", bandwidthMeter);
 
         // LoadControl that controls when the MediaSource buffers more media, and how much media is buffered.
         // LoadControl is injected when the player is created.
@@ -244,19 +230,15 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
       //  addAdsToMediaSource();
     }
 
-    private MediaSource addSubTitlesToMediaSource(MediaSource mediaSource, String subTitlesUrl)
-    {
-        Format textFormat = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP,
-                null, Format.NO_VALUE, Format.NO_VALUE, "en", Format.NO_VALUE, null);
+    private MediaSource addSubTitlesToMediaSource(MediaSource mediaSource, String subTitlesUrl) {
+        Format textFormat = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP, null, Format.NO_VALUE, Format.NO_VALUE, "en", Format.NO_VALUE, null);
         Uri uri = Uri.parse(subTitlesUrl);
-        MediaSource subtitleSource = new SingleSampleMediaSource.Factory(mDataSourceFactory)
-                .createMediaSource(uri, textFormat, C.TIME_UNSET);
+        MediaSource subtitleSource = new SingleSampleMediaSource.Factory(mDataSourceFactory).createMediaSource(uri, textFormat, C.TIME_UNSET);
         return new MergingMediaSource(mediaSource, subtitleSource);
     }
 
     @SuppressLint("SwitchIntDef")
-    private MediaSource buildMediaSource(Uri uri)
-    {
+    private MediaSource buildMediaSource(Uri uri) {
         int type = Util.inferContentType(uri);
         switch (type) {
             case C.TYPE_DASH:
@@ -347,8 +329,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         mBtnMute.setImageResource(this.isVideoMuted ? R.drawable.ic_action_mute : R.drawable.ic_action_volume_up);
     }
 
-    private void updateMutedStatus()
-    {
+    private void updateMutedStatus() {
         boolean isMuted = (mPlayer.isPlayingAd() && isAdMuted) || (!mPlayer.isPlayingAd() && isVideoMuted);
         if (isMuted) {
             mPlayer.setVolume(0f);
@@ -358,34 +339,6 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         if (mBtnMute != null) {
             mBtnMute.setImageResource(isMuted ? R.drawable.ic_action_mute : R.drawable.ic_action_volume_up);
         }
-    }
-
-    private void enableCache(int maxCacheSizeMb)
-    {
-        LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(maxCacheSizeMb * 1024 * 1024);
-        File file = new File(mContext.getCacheDir(), "media");
-        Log.d("ZAQ", "enableCache (" + maxCacheSizeMb + " MB), file: " + file.getAbsolutePath());
-        SimpleCache simpleCache = new SimpleCache(file, evictor);
-        mDataSourceFactory = new CacheDataSourceFactory(
-                simpleCache,
-                mDataSourceFactory,
-                new FileDataSourceFactory(),
-                new CacheDataSinkFactory(simpleCache, 2 * 1024 * 1024),
-                CacheDataSource.FLAG_BLOCK_ON_CACHE | CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR,
-                new CacheDataSource.EventListener()
-                {
-                    @Override
-                    public void onCacheIgnored(int reason)
-                    {
-                        Log.d("ZAQ", "onCacheIgnored");
-                    }
-
-                    @Override
-                    public void onCachedBytesRead(long cacheSizeBytes, long cachedBytesRead)
-                    {
-                        Log.d("ZAQ", "onCachedBytesRead , cacheSizeBytes: " + cacheSizeBytes + "   cachedBytesRead: " + cachedBytesRead);
-                    }
-                });
     }
 
     @Override
@@ -620,13 +573,6 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         public Builder setThumbImageViewEnabled(MediaThumbListener exoThumbListener)
         {
             mExoPlayerHelper.setExoThumbListener(exoThumbListener);
-            return this;
-        }
-
-        @SuppressWarnings("unused")
-        public Builder enableCache(int maxCacheSizeMb)
-        {
-            mExoPlayerHelper.enableCache(maxCacheSizeMb);
             return this;
         }
 
@@ -1043,8 +989,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
     }
 
     @Override
-    public void onPlayerError(ExoPlaybackException e)
-    {
+    public void onPlayerError(ExoPlaybackException e) {
         String errorString = null;
 
         switch (e.type) {
@@ -1071,7 +1016,6 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
                 errorString = runtimeException.getMessage();
                 break;
             case ExoPlaybackException.TYPE_OUT_OF_MEMORY:
-                break;
             case ExoPlaybackException.TYPE_REMOTE:
                 break;
         }
@@ -1081,17 +1025,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
             if (cause instanceof MediaCodecRenderer.DecoderInitializationException) {
                 // Special case for decoder initialization failures.
                 MediaCodecRenderer.DecoderInitializationException decoderInitializationException = (MediaCodecRenderer.DecoderInitializationException) cause;
-                if (decoderInitializationException.decoderName == null) {
-                    if (decoderInitializationException.getCause() instanceof MediaCodecUtil.DecoderQueryException) {
-                        errorString = mContext.getString(R.string.error_querying_decoders);
-                    } else if (decoderInitializationException.secureDecoderRequired) {
-                        errorString = mContext.getString(R.string.error_no_secure_decoder, decoderInitializationException.mimeType);
-                    } else {
-                        errorString = mContext.getString(R.string.error_no_decoder, decoderInitializationException.mimeType);
-                    }
-                } else {
-                    errorString = mContext.getString(R.string.error_instantiating_decoder, decoderInitializationException.decoderName);
-                }
+                errorString = mContext.getString(R.string.error_instantiating_decoder, decoderInitializationException.mimeType);
             }
         }
 
@@ -1110,8 +1044,7 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
         }
     }
 
-    private static boolean isBehindLiveWindow(ExoPlaybackException e)
-    {
+    private static boolean isBehindLiveWindow(ExoPlaybackException e) {
         if (e.type != ExoPlaybackException.TYPE_SOURCE) {
             return false;
         }
@@ -1151,12 +1084,6 @@ public class MediaPlayerHelper implements View.OnClickListener, View.OnTouchList
 
     @Override
     public void onSeekProcessed()
-    {
-
-    }
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest, int reason)
     {
 
     }

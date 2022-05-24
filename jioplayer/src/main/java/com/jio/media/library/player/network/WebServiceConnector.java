@@ -13,17 +13,14 @@ import java.util.HashMap;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
-public class WebServiceConnector extends WebServiceClient
-{
+public class WebServiceConnector extends WebServiceClient {
     private static WebServiceConnector serviceConnector;
 
-    private WebServiceConnector()
-    {
+    private WebServiceConnector() {
         super();
     }
 
-    public static WebServiceConnector getInstance()
-    {
+    public static WebServiceConnector getInstance() {
         if (serviceConnector == null) {
             serviceConnector = new WebServiceConnector();
         }
@@ -31,14 +28,7 @@ public class WebServiceConnector extends WebServiceClient
         return serviceConnector;
     }
 
-    public void getZlaLoginData(final INetworkResultListener apiResultListener, final int requestCode, Context context)
-    {
-        ApiInterface service = getRetrofit().create(ApiInterface.class);
-        service.zlaLoginResponse(appName, getDeviceName(), DEVICE_NAME, getDeviceId(context)).enqueue(new APICallback(requestCode, apiResultListener));
-    }
-
-    public void getLoginViaSubIdData(final String ssoToken, final String subscriberId, final String deviceId, final INetworkResultListener apiResultListener, final int requestCode)
-    {
+    public void getLoginViaSubIdData(final String ssoToken, final String subscriberId, final String deviceId, final INetworkResultListener apiResultListener, final int requestCode) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -60,8 +50,7 @@ public class WebServiceConnector extends WebServiceClient
         service.refreshTokenResponse(body).enqueue(new APICallback(requestCode, apiResultListener));
     }
 
-    public void getConfig(final INetworkResultListener apiResultListener, final int requestCode)
-    {
+    public void getConfig(final INetworkResultListener apiResultListener, final int requestCode) {
         ApiInterface service = getRetrofitProd().create(ApiInterface.class);
         service.getConfig().enqueue(new APICallback(requestCode, apiResultListener));
     }
@@ -76,9 +65,7 @@ public class WebServiceConnector extends WebServiceClient
         }
     }
 
-    public void sendEventForInternalAnalytics(final INetworkResultListener apiResultListener, final int requestCode,
-                                              HashMap<String, Object> map)
-    {
+    public void sendEventForInternalAnalytics(final INetworkResultListener apiResultListener, final int requestCode, HashMap<String, Object> map) {
         ApiInterface service = getRetrofitAnalytics().create(ApiInterface.class);
 
         Gson gson = new Gson();
@@ -88,9 +75,7 @@ public class WebServiceConnector extends WebServiceClient
         service.analyticsAPIForEvent(body).enqueue(new APICallback(requestCode, apiResultListener));
     }
 
-    public void sendAnalyticsAPIForBegin(final INetworkResultListener apiResultListener, final int requestCode,
-                                         HashMap<String, Object> map)
-    {
+    public void sendAnalyticsAPIForBegin(final INetworkResultListener apiResultListener, final int requestCode, HashMap<String, Object> map) {
         ApiInterface service = getRetrofitAnalytics().create(ApiInterface.class);
 
         Gson gson = new Gson();
@@ -100,9 +85,7 @@ public class WebServiceConnector extends WebServiceClient
         service.analyticsAPIForBegin(body).enqueue(new APICallback(requestCode, apiResultListener));
     }
 
-    public void sendAnalyticsAPIForEnd(final INetworkResultListener apiResultListener, final int requestCode,
-                                       HashMap<String, Object> map)
-    {
+    public void sendAnalyticsAPIForEnd(final INetworkResultListener apiResultListener, final int requestCode, HashMap<String, Object> map) {
         ApiInterface service = getRetrofitAnalytics().create(ApiInterface.class);
 
         Gson gson = new Gson();

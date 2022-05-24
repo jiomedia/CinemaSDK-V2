@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.jiomedia'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     dataBinding {
         enabled = true
@@ -11,9 +11,10 @@ android {
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -29,24 +30,25 @@ android {
     }
 }
 
-ext.exoPlayerVersion = '2.10.2'
-ext.exoPlayerUiVersion = '2.9.6'
+ext.exoPlayerVersion = '2.11.8'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     api "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
-    api "com.google.android.exoplayer:exoplayer-ui:$exoPlayerUiVersion"
+    api "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
     api "com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion"
     api "com.google.android.exoplayer:exoplayer-dash:$exoPlayerVersion"
     api "com.google.android.exoplayer:extension-ima:$exoPlayerVersion"
 
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+
 }

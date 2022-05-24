@@ -23,12 +23,9 @@ class WebServiceClient extends RequestUtils
     private Retrofit retrofit;
     private Retrofit retrofitProd;
     private Retrofit retrofitSecure;
-
     private Retrofit retrofitAnalytics;
 
-    WebServiceClient()
-    {
-        retrofit = new Retrofit.Builder().baseUrl(getUnSecureBaseUrl()).client(getOkHttpClient()).build();
+    WebServiceClient() {
         retrofitSecure = new Retrofit.Builder().baseUrl(getSecureBaseUrl()).client(getOkHttpClient()).build();
         retrofitProd = new Retrofit.Builder().baseUrl(getProdBaseUrl()).client(getOkHttpClient()).build();
         retrofitAnalytics = new Retrofit.Builder().baseUrl(getAnalyticsUrl()).client(getOkHttpClientForAnalytics()).build();
@@ -43,13 +40,10 @@ class WebServiceClient extends RequestUtils
                 .build();
     }
 
-    private OkHttpClient getOkHttpClient()
-    {
-        Interceptor headerInterceptor = new Interceptor()
-        {
+    private OkHttpClient getOkHttpClient() {
+        Interceptor headerInterceptor = new Interceptor() {
             @Override
-            public okhttp3.Response intercept(@NonNull Chain chain) throws IOException
-            {
+            public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                 Request request = chain.request()
                         .newBuilder()
                         .removeHeader("user-agent")
@@ -78,24 +72,16 @@ class WebServiceClient extends RequestUtils
         return retrofitSecure;
     }
 
-    Retrofit getRetrofit()
-    {
-        return retrofit;
-    }
-
     public Retrofit getRetrofitAnalytics()
     {
         return retrofitAnalytics;
     }
 
-
-    Retrofit getRetrofitProd()
-    {
+    Retrofit getRetrofitProd() {
         return retrofitProd;
     }
 
-    private void validateResponse(@NonNull Response<ResponseBody> response, INetworkResultListener apiResultListener, int requestCode, HttpUrl url)
-    {
+    private void validateResponse(@NonNull Response<ResponseBody> response, INetworkResultListener apiResultListener, int requestCode, HttpUrl url) {
         try {
             ResponseBody data = response.body();
             ResponseBody error = response.errorBody();
@@ -117,33 +103,28 @@ class WebServiceClient extends RequestUtils
         }
     }
 
-    private void validateError(Throwable throwable, INetworkResultListener apiResultListener, int requestCode, HttpUrl url)
-    {
+    private void validateError(Throwable throwable, INetworkResultListener apiResultListener, int requestCode, HttpUrl url) {
         if (apiResultListener != null) {
             apiResultListener.onFailed(throwable.getMessage(), requestCode, requestCode);
         }
     }
 
-    class APICallback implements Callback<ResponseBody>
-    {
+    class APICallback implements Callback<ResponseBody> {
         private int requestCode;
         private INetworkResultListener apiResultListener;
 
-        APICallback(int requestCode, INetworkResultListener apiResultListener)
-        {
+        APICallback(int requestCode, INetworkResultListener apiResultListener) {
             this.requestCode = requestCode;
             this.apiResultListener = apiResultListener;
         }
 
         @Override
-        public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response)
-        {
+        public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
             validateResponse(response, apiResultListener, requestCode, call.request().url());
         }
 
         @Override
-        public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable)
-        {
+        public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
             validateError(throwable, apiResultListener, requestCode, call.request().url());
         }
     }

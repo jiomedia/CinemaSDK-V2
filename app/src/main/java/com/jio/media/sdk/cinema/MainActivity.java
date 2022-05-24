@@ -1,16 +1,14 @@
 package com.jio.media.sdk.cinema;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
+
+import android.os.Bundle;
 import android.widget.Button;
 
-import com.jio.media.library.player.model.information.VideoInformation;
 import com.jio.media.library.player.utils.Logger;
 import com.jio.media.library.player.view.PlayerViewActivity;
 import com.jio.media.library.player.viewmodel.MediaViewModel;
@@ -18,13 +16,12 @@ import com.jio.media.library.player.viewmodel.MediaViewModel;
 public class MainActivity extends AppCompatActivity
 {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         MediaViewModel mediaViewModel = ViewModelProviders.of(this).get(MediaViewModel.class);
-        mediaViewModel.startMediaPlayer("{\"deviceInfo\":{\"consumptionDeviceName\":\"Mytablet\",\"jToken\":\"f1a7af76450b52dcbd77a83f5fa30116.2d66a2dcc8295111a775753e24d8aad8dae0312c6ccc6a50fb35a3c38cd6e7afb13f005832a6caf691b6b88811d6fbcfe0169f72cf7c69697f249c6b28aa03eac48461011b6b21b979699458dbb82354fa492e0f3920a630801752fc3a49aa059207a864dbae6c34fc1374664150f2f88066e982387c63262e04bcbe53f55bef1b66cdd8fc7bc911639fcd4b3ee16ff461955c5408a12683f273d62c913bcd8a1aa0f7c1ab425a13601fb6295bb3297c18751a9cb25580d2a242706195b80e7febf8ac16af37df9f2f43d040f80c387a1d59f61c033ccd236f7b1b5c7eb582ebe808a2027f659b8f25705b806caad7e86cbdb8d234f45607913b823d999f3b254647f3c3c16a748e611d1c4d7b6c6c356b1ab4da7450887c776267d5fb679341ea97081696f61525940d47455bc678bf98d37a8097829a9f976c050a6fe21ad5c725284ba10be4b14d14d0051d1ff6159c34a9a8f00b4d2f0f9d3195c68b260e\",\"info\":{\"androidId\":\"6c1aeec6741e29a8\",\"mac\":\"02:00:00:00:00:00\",\"type\":\"android\",\"imsi\":\"\"}},\"ssoToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1bmlxdWUiOiI0YmRiNzZiYS1lYjc2LTRlMTEtODhjZi1mZmQzMGY2ZjUwYmMiLCJ1c2VyVHlwZSI6IlJJTHBlcnNvbiIsImF1dGhMZXZlbCI6IjMwIiwiZGV2aWNlSWQiOiI4ZDc0YTcxYTdmZWY5ZWZmYWZhNmMwZTY0MDk3ZjdlNTg2OWYxNTNkYmM3ODlhZDJkNGE4YTQwNGJhODAxZDUwNzY2OTU4OWNkYjUzNmI4OTZkY2YzMDY0ZmM2M2IwYWVmOGIyODQyN2I2MjBjNTdiMTY4Njk5NzU3NDdhOTk1NSIsImp0aSI6ImU2Y2U5MDQxLTU2ZDItNGVjMi05NjE4LWJlNGY1ODAwZWNkZCIsImlhdCI6MTYzMDY1NTYyOX0.ZKCWsMZzL6Qp376MIcHSiaig97xTyNqr08Hi9DI2fck\",\"subscriberId\":\"9335729617\",\"uniqueId\":\"4bdb76ba-eb76-4e11-88cf-ffd30f6f50bc\",\"uId\":\"hussainchachuliya2\",\"name\":\"Hussain Chachuliya\",\"loginType\":3,\"ssoExpired\":false}");
+        mediaViewModel.startMediaPlayer(" {\"deviceInfo\":{\"consumptionDeviceName\":\"Mytablet\",\"jToken\":\"193db14786d76c1151754dbb2c06962c.bb52c2feae4ec0561ad0b7672cb6765f28dd6d2116e239296d28f5b931135bb08d42872b5404a56b8e8a53578c87bbaa19728c5c81f35b55152410a52848e0b3c90101a406126bcee1c8f2fabcfe5d20f0e9fc332f85c3f467f6da9385798e932a2d69007188c2e342d79bb5bd0d4d52eb437f925302c5a66a407cc7fe99848dd723b5d10ff1eea9dce7ff43bf09e2cceb9e84ccad52d3ab974ee0c3453bdec40517006e3c6687fab9e051a822da7ec8cb7bb312a533883e21fa5994682bd383a7a4381d2c7b8ad3126e40a15ac5bcbb50f9a0b7e927704aeb713df696e87e2963bd5a645feba9cc59fa20846fd55532ef920261fd189985049a934077ffe42ffa2d45729ca717e9e2db109f47b40a2bd674edb25062c811283ba3a54758c713806f5dd846a1d1ce28bb4255e9bba1da7c457af18b5840e8c1e185aef3e2d922f06ac59bf6aa3b5eff202f76e9e52391949d69a97a5a91c1a0f093b9d3be46b8\",\"info\":{\"androidId\":\"82109e0f9d6f135b\",\"mac\":\"02:00:00:00:00:00\",\"type\":\"android\",\"imsi\":\"\"}},\"ssoToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1bmlxdWUiOiI2ZTQ3ZGQwMi00NDkxLTRjOTQtYmExNi1mNTJkNGM0NzM3NzciLCJ1c2VyVHlwZSI6IlJJTHBlcnNvbiIsImF1dGhMZXZlbCI6IjMwIiwiZGV2aWNlSWQiOiI4ZDc0YTcxYTdmZWY5ZWZmYWZhNmMwZTY0MDk3ZjdlNTg2OWYxNTNkYmM3ODlhZDJkNGE4YTQwNGJhODAxZDUwNzY2OTU4OWNkYjUzNmI4OTZkY2YzMDY0ZmM2M2IwYWVmOGIyODQyN2I2MjBjNTdiMTY4Njk5NzU3NDdhOTk1NSIsImp0aSI6ImMwM2FjNjdkLTJkODYtNGE0NS1hOWZlLTQ4YzYyZTM3ZGY0OCIsImlhdCI6MTYzMjMwNTkxN30.bt2DZ3B-FYz7GJf2CW7o-aFQUlpkKM1y8qPJ-RjAjUs\",\"subscriberId\":\"9335166293\",\"uniqueId\":\"6e47dd02-4491-4c94-ba16-f52d4c473777\",\"uId\":\"imranansari268\",\"name\":\"Imran Ansari\",\"loginType\":3,\"ssoExpired\":false}");
 
         mediaViewModel.getInformationLiveData().observe(this, videoInformation -> {
             Intent intent = new Intent(MainActivity.this, PlayerViewActivity.class);

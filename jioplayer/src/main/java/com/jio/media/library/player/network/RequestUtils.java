@@ -6,10 +6,6 @@ class RequestUtils extends DeviceUtils {
 
     final long REQUEST_TIMEOUT = 30;
 
-    String getUnSecureBaseUrl() {
-        return "http://api.jio.com";
-    }
-
     String getSecureBaseUrl() {
         return "https://api.jio.com";
     }

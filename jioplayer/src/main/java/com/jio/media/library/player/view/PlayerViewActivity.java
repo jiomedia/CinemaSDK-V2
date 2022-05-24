@@ -55,7 +55,7 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
             if (getIntent() != null && getIntent().getExtras() != null) {
                 videoInformation = (VideoInformation) getIntent().getSerializableExtra("videoInformation");
                 if (videoInformation != null) {
-                    setPlayerView(savedInstanceState);
+                    setPlayerView();
                     binding.videoTitle.setText(videoInformation.getVideoTitle());
                     binding.videoSubTitle.setText(videoInformation.getVideoSubTitle());
                     binding.videoDescription.setText(videoInformation.getVideoDescription());
@@ -193,13 +193,12 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    private void setPlayerView(@Nullable Bundle savedInstanceState)
-    {
+    private void setPlayerView() {
         mediaPlayerHelper = new MediaPlayerHelper.Builder(this, binding.videoView)
                 .setVideoUrls(videoInformation.getUrl())
                 .setRepeatModeOn(true)
                 .setAutoPlayOn(true)
-                .addSavedInstanceState(savedInstanceState)
+                .addSavedInstanceState(null)
                 .setFullScreenBtnVisible()
                 .setMuteBtnVisible()
                 .setVideoName(videoInformation.getName())
@@ -240,33 +239,30 @@ public class PlayerViewActivity extends AppCompatActivity implements MediaPlayer
     public void onStart()
     {
         super.onStart();
-        mediaPlayerHelper.onActivityStart();
+        if (mediaPlayerHelper != null) mediaPlayerHelper.onActivityStart();
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        mediaPlayerHelper.onActivityResume();
+        if (mediaPlayerHelper != null) mediaPlayerHelper.onActivityResume();
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
-        mediaPlayerHelper.onActivityPause();
+        if (mediaPlayerHelper != null) mediaPlayerHelper.onActivityPause();
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
         mediaPlayerHelper.onActivityStop();
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         mediaPlayerHelper.onActivityDestroy();
     }
